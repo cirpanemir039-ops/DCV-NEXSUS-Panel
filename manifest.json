@@ -1,0 +1,70 @@
+{
+   "manifest_version": 3,
+   "name": "DCV - NEXSUS Panel",
+   "version": "2.0.2.0",
+   "description": "Discord Otomatik Görev Tamamlayıcı & HypeSquad Paneli - NEXSUS Sürümü",
+   "author": "NEXSUS",
+   "permissions": [
+      "declarativeNetRequestWithHostAccess",
+      "scripting",
+      "activeTab"
+   ],
+   "host_permissions": [
+      "https://*.discord.com/*"
+   ],
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_scripts": [
+      {
+         "matches": [
+            "https://discord.com/*",
+            "https://canary.discord.com/*",
+            "https://ptb.discord.com/*"
+         ],
+         "js": [
+            "quest-home.js"
+         ],
+         "run_at": "document_idle"
+      },
+      {
+         "matches": [
+            "https://discord.com/*",
+            "https://canary.discord.com/*",
+            "https://ptb.discord.com/*"
+         ],
+         "js": [
+            "user-agent-override.js"
+         ],
+         "run_at": "document_start",
+         "world": "MAIN"
+      }
+   ],
+   "web_accessible_resources": [
+      {
+         "resources": [
+            "assets/*",
+            "icon128.png"
+         ],
+         "matches": [
+            "https://discord.com/*",
+            "https://canary.discord.com/*",
+            "https://ptb.discord.com/*"
+         ]
+      }
+   ],
+   "declarative_net_request": {
+      "rule_resources": [
+         {
+            "id": "ruleset_1",
+            "enabled": true,
+            "path": "rules.json"
+         }
+      ]
+   },
+   "icons": {
+      "16": "assets/icon.png",
+      "48": "assets/icon.png",
+      "128": "icon128.png"
+   }
+}
