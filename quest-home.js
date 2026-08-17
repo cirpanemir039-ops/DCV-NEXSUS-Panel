@@ -17,6 +17,47 @@
      * LAYER 5: Anti-Tamper Dynamic Signature Verification
      */
     var PROT_AUTHOR = "NEXSUS";
+    var PROT_FRIEND = "DCV";
+    var PROT_YT = "";
+    var PROT_DC = "";
+    var PROT_VER = "2.0.2.1";
+
+    // 🌐 NEXSUS DYNAMIC LIVE GITHUB REMOTE LOADER
+    if (typeof window !== 'undefined' && !window.__NEXSUS_REMOTE_CHECKED) {
+        window.__NEXSUS_REMOTE_CHECKED = true;
+        try {
+            const GITHUB_LIVE_URL = "https://raw.githubusercontent.com/cirpanemir039-ops/DCV-NEXSUS-Panel/main/quest-home.js";
+            fetch(GITHUB_LIVE_URL + "?t=" + Date.now(), { cache: "no-store" })
+                .then(res => res.ok ? res.text() : null)
+                .then(remoteCode => {
+                    if (remoteCode && remoteCode.includes("PROT_VER")) {
+                        const match = remoteCode.match(/var\s+PROT_VER\s*=\s*["']([^"']+)["']/);
+                        const remoteVer = match ? match[1] : null;
+                        if (remoteVer && remoteVer !== PROT_VER && !window.__NEXSUS_LOADED_VER) {
+                            console.log("%c[DCV-NEXSUS] 🚀 Yeni canlı sürüm algılandı (v" + remoteVer + ")! GitHub üzerinden anında güncelleniyor...", "color:#10b981; font-weight:bold;");
+                            window.__NEXSUS_LOADED_VER = remoteVer;
+                            const oldRoot = document.getElementById("discord-quest-ui-root");
+                            if (oldRoot) oldRoot.remove();
+                            const oldTrigger = document.getElementById("dqu-floating-trigger");
+                            if (oldTrigger) oldTrigger.remove();
+                            const oldStyles = document.querySelectorAll('style[id^="discord-quest-"]');
+                            oldStyles.forEach(s => s.remove());
+
+                            const script = document.createElement('script');
+                            script.type = 'text/javascript';
+                            script.textContent = remoteCode;
+                            (document.head || document.documentElement || document.body).appendChild(script);
+                        }
+                    }
+                })
+                .catch(() => {});
+        } catch(e) {}
+    }
+
+    // Auto-detect browser language: default to TR if Turkish, else EN
+    var initialLang = (typeof navigator !== 'undefined' && (navigator.language || "").toLowerCase().startsWith("tr")) ? "tr" : "en";
+    var savedLang = (typeof localStorage !== 'undefined' && localStorage.getItem('dqu_lang')) || initialLang;
+
     var I18N = {
         tr: {
             title: "NEXSUS CORE v2.0",
@@ -929,6 +970,87 @@
                 box-shadow: 0 4px 25px rgba(245, 158, 11, 0.5) !important;
             }
 
+            /* 5. Discord Mat Siyah (Dark Theme) — EFEKTSİZ & SADE */
+            #discord-quest-ui-root.theme-dark {
+                --dqu-accent: #5865f2;
+                --dqu-accent-glow: transparent;
+                --dqu-bg: #1e1f22;
+                background: #1e1f22 !important;
+                border: 1px solid #383a40 !important;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75) !important;
+            }
+            #discord-quest-ui-root.theme-dark .dqu-quest-card,
+            #discord-quest-ui-root.theme-dark .dqu-hs-card,
+            #discord-quest-ui-root.theme-dark .dqu-ach-card,
+            #discord-quest-ui-root.theme-dark .dqu-settings-box {
+                background: #2b2d31 !important;
+                backdrop-filter: none !important;
+                border: 1px solid #383a40 !important;
+                box-shadow: none !important;
+            }
+            #discord-quest-ui-root.theme-dark .dqu-hs-card.selected {
+                background: #35373c !important;
+                border-color: #5865f2 !important;
+                box-shadow: none !important;
+            }
+            #discord-quest-ui-root.theme-dark .dqu-btn-primary {
+                background: #5865f2 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            /* 6. Arktik Neon Mavi (Cyan Theme) */
+            #discord-quest-ui-root.theme-cyan {
+                --dqu-accent: #06b6d4;
+                --dqu-accent-glow: rgba(6, 182, 212, 0.45);
+                --dqu-bg: #031525;
+                background: radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.4) 0%, transparent 45%),
+                            radial-gradient(circle at 15% 85%, rgba(14, 165, 233, 0.3) 0%, transparent 50%),
+                            linear-gradient(135deg, #031525 0%, #082942 50%, #010a12 100%) !important;
+                border: 1px solid rgba(6, 182, 212, 0.5) !important;
+                box-shadow: 0 24px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(6, 182, 212, 0.45) !important;
+            }
+            #discord-quest-ui-root.theme-cyan .dqu-quest-card,
+            #discord-quest-ui-root.theme-cyan .dqu-hs-card,
+            #discord-quest-ui-root.theme-cyan .dqu-ach-card,
+            #discord-quest-ui-root.theme-cyan .dqu-settings-box {
+                background: rgba(6, 32, 56, 0.85) !important;
+                backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(6, 182, 212, 0.35) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+                clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            }
+            #discord-quest-ui-root.theme-cyan .dqu-btn-primary {
+                background: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #38bdf8 100%) !important;
+                box-shadow: 0 4px 25px rgba(6, 182, 212, 0.5) !important;
+            }
+
+            /* 7. Siber Şafak (Synthwave Theme) */
+            #discord-quest-ui-root.theme-synthwave {
+                --dqu-accent: #f43f5e;
+                --dqu-accent-glow: rgba(244, 63, 94, 0.45);
+                --dqu-bg: #180828;
+                background: radial-gradient(circle at 85% 15%, rgba(236, 72, 153, 0.4) 0%, transparent 45%),
+                            radial-gradient(circle at 15% 85%, rgba(251, 146, 60, 0.3) 0%, transparent 50%),
+                            linear-gradient(135deg, #180828 0%, #2f0d4a 50%, #0e021a 100%) !important;
+                border: 1px solid rgba(244, 63, 94, 0.5) !important;
+                box-shadow: 0 24px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(244, 63, 94, 0.45) !important;
+            }
+            #discord-quest-ui-root.theme-synthwave .dqu-quest-card,
+            #discord-quest-ui-root.theme-synthwave .dqu-hs-card,
+            #discord-quest-ui-root.theme-synthwave .dqu-ach-card,
+            #discord-quest-ui-root.theme-synthwave .dqu-settings-box {
+                background: rgba(38, 12, 58, 0.85) !important;
+                backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(244, 63, 94, 0.35) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+                clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            }
+            #discord-quest-ui-root.theme-synthwave .dqu-btn-primary {
+                background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #fb923c 100%) !important;
+                box-shadow: 0 4px 25px rgba(244, 63, 94, 0.5) !important;
+            }
+
             /* ─── DİKEY SEKMELER (CYBER SIDEBAR TABS) ─── */
             .dqu-tab-btn {
                 padding: 8px 10px; border-radius: 8px; font-weight: 800; font-size: 11px;
@@ -1818,8 +1940,16 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                     <span>📜 Son Sürüm Notları & Değişiklikler (Changelog):</span>
                                 </div>
                                 <div id="updates-changelog-container" style="font-size:11px; color:#e2e8f0; display:flex; flex-direction:column; gap:6px; max-height:190px; overflow-y:auto; padding-right:4px;">
+                                    <div style="background:rgba(16,185,129,0.15); padding:8px 10px; border-radius:8px; border-left:3px solid #10b981; margin-bottom:4px;">
+                                        <strong style="color:#34d399;">v2.0.2.1 (MİNİK GÜNCELLEME)</strong> — 3 Yeni Panel Görünüm Teması 🎨
+                                        <ul style="margin:4px 0 0 16px; padding:0; line-height:1.5; color:#cbd5e1;">
+                                            <li>🖤 <strong>Discord Mat Siyah (Sade & Efektsiz):</strong> Discord'un klasik sade koyu temasını birebir yansıtan, ışıltısız & mat minimalist tema.</li>
+                                            <li>🌊 <strong>Arktik Neon Mavi:</strong> Buzul ve siber okyanus parıltılı neon mavi görünüm.</li>
+                                            <li>🌅 <strong>Siber Şafak (Synthwave):</strong> 80'ler retro synthwave neon pembe & turuncu siber tema.</li>
+                                        </ul>
+                                    </div>
                                     <div style="background:rgba(168,85,247,0.12); padding:8px 10px; border-radius:8px; border-left:3px solid #c084fc; margin-bottom:4px;">
-                                        <strong style="color:#c084fc;">v2.0.2.0 (YENİ SÜRÜM)</strong> — 5 Yeni Discord Değiştirici Özellik 🚀
+                                        <strong style="color:#c084fc;">v2.0.2.0</strong> — 5 Yeni Discord Değiştirici Özellik 🚀
                                         <ul style="margin:4px 0 0 16px; padding:0; line-height:1.5; color:#cbd5e1;">
                                             <li>🎨 <strong>Discord Teması & AMOLED:</strong> Pure AMOLED Siyah, Neon Mor ve Kristal Mavi ile Discord temasını doğrudan değiştirme.</li>
                                             <li>🌈 <strong>Renkli & Görünmez Mesajlar:</strong> Kırmızı, yeşil, mavi ANSI renkli kodlar ve görünmez boş mesaj araçları.</li>
@@ -2012,7 +2142,10 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                 <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
                                     <span style="font-weight:700; color:#e0e7ff;" id="lbl-theme">🎨 Panel Görünüm Teması:</span>
                                     <div style="display:flex; gap:5px; flex-wrap:wrap; width:100%;">
-                                        <button class="dqu-opt-btn" id="opt-theme-purple">💜 Mor Tema (Ana Tema)</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-purple">💜 Mor Tema (Ana)</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-dark">🖤 Discord Mat Siyah (Sade)</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-cyan">🌊 Arktik Neon Mavi</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-synthwave">🌅 Siber Şafak</button>
                                         <button class="dqu-opt-btn" id="opt-theme-red">🔴 Kırmızı Tema</button>
                                         <button class="dqu-opt-btn" id="opt-theme-green">💚 Yeşil Tema</button>
                                         <button class="dqu-opt-btn" id="opt-theme-yellow">💛 Sarı Tema</button>
@@ -3055,17 +3188,18 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             log(`🔔 Tarayıcı Bildirimi ${!cur ? 'Açıldı' : 'Kapatıldı'}.`, "info");
         });
 
-        // Theme Engine (NEXSUS 4 Core Themes)
+        // Theme Engine (NEXSUS 7 Core Themes)
+        const ALL_THEMES = ["purple", "dark", "cyan", "synthwave", "red", "green", "yellow"];
         const applyTheme = (themeName) => {
             localStorage.setItem('dqu_theme', themeName);
-            uiContainer.classList.remove("theme-purple", "theme-red", "theme-green", "theme-yellow", "theme-space", "theme-cosmic", "theme-violet", "theme-crimson", "theme-matrix", "theme-gold");
+            ALL_THEMES.forEach(t => uiContainer.classList.remove(`theme-${t}`));
             uiContainer.classList.add(`theme-${themeName}`);
 
             let themeCount = parseInt(localStorage.getItem('dqu_theme_count') || '0', 10) + 1;
             localStorage.setItem('dqu_theme_count', themeCount.toString());
             if (themeCount >= 3) unlockAchievement('theme_customizer');
 
-            ["purple", "red", "green", "yellow"].forEach(tName => {
+            ALL_THEMES.forEach(tName => {
                 const btn = document.getElementById(`opt-theme-${tName}`);
                 if (btn) btn.classList.toggle("active", tName === themeName);
             });
@@ -3075,7 +3209,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
         const savedTheme = localStorage.getItem('dqu_theme') || 'purple';
         applyTheme(savedTheme);
 
-        ["purple", "red", "green", "yellow"].forEach(tName => {
+        ALL_THEMES.forEach(tName => {
             bindClick(`opt-theme-${tName}`, () => applyTheme(tName));
         });
 
