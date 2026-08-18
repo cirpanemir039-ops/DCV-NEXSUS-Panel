@@ -1,9 +1,15 @@
-# 🛡️ NEXSUS CORE — CRYPTOGRAPHIC SECURITY MANIFEST (`v2.0.1.1`)
+# 🛡️ DCV NEXSUS CORE v2.1.0.0
 
-```
-0x4e45585355535f434f52455f53454355524954595f5641554c545f32303236
-\x4e\x45\x58\x53\x55\x53\x20\x43\x4f\x52\x45\x20\x76\x32\x2e\x30\x2e\x31\x2e\x31
-\x0f\x0f\x20\x47\xc3\xb6\x72\x65\x76\x6c\x65\x72\x20\x4d\x6f\x74\x6f\x72\xc3\xbc
-```
+**DCV NEXSUS Panel:** Discord Otomatik Görev Tamamlayıcı, HypeSquad Yöneticisi, 11 Siber Tema, 4D Blok Duvar Buton Fiziği, Gelişmiş Panel Ayarları ve Discord Araç Takımı.
 
-> **SECURITY NOTICE:** All JavaScript modules in this repository (`quest-home.js`, `background.js`, `quest-code.js`, `user-agent-override.js`, `dcv-desktop-injector.user.js`) are encrypted under the **NEXSUS 5-Layer Polymorphic Crypto Architecture**. Any unauthorized decompilation, formatting, or AI-assisted tampering will trigger the self-defending regex trap and lock execution.
+---
+
+## ⚡ v2.1.0.0 Devasa Güncelleme Özellikleri
+
+- 🧱 **4D / 3D Blok Duvar Buton Fiziği:** 4 taraflı ışık kırılımları, derinlik gölgeleri ve fiziksel tıklama (`push-down`) basma hissi.
+- 🖤 **Saf OLED Siyah Tema:** Sıfır gri, saf derin `#000000` AMOLED siber tema.
+- 🌈 **İkili Renk Temaları:** Cyberpunk Neon (Mor+Kırmızı), Emerald Dynasty (Yeşil+Altın), Portal Nova (Mavi+Turuncu) ve tonlama derinliği.
+- 🖥️ **Panel Ayarları:** Dikey / Yatay menü düzeni, kenar çubuğu yönü, küçük butonun 4 köşede konumlandırılması ve 4 kademeli boyut ayarı.
+- 🛠️ **4 Yeni Discord Aracı:** Mikrofon Loopback & Yankı Testçisi, Şifreli Gizli Mesajlaşma, Pomodoro Odak Sayacı, AFK Durum Döngüleyici.
+- ✨ **5 Süper Yeni Sistem Özelliği:** Canlı Ping & FPS Monitörü HUD, Audio Frekans Spektrumu, Kısayol Tuşları (`Alt+X`, `Alt+S`, `Alt+Q`), ASCII Şablon Panosu, Başarım Seviye Sistemi.
+- 🌐 **Dinamik Canlı GitHub Güncelleme Motoru:** GitHub'a kod yüklendiğinde Web ve Masaüstü kullanıcıları için anında canlı güncelleme.

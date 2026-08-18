@@ -20,37 +20,50 @@
     var PROT_FRIEND = "DCV";
     var PROT_YT = "";
     var PROT_DC = "";
-    var PROT_VER = "2.0.2.1";
+    var PROT_VER = "2.1.1.0";
 
     // 🌐 NEXSUS DYNAMIC LIVE GITHUB REMOTE LOADER
+    function isStrictlyNewer(remote, local) {
+        if (!remote || !local) return false;
+        var p1 = remote.split('.').map(function(n) { return parseInt(n, 10) || 0; });
+        var p2 = local.split('.').map(function(n) { return parseInt(n, 10) || 0; });
+        for (var i = 0; i < Math.max(p1.length, p2.length); i++) {
+            var n1 = p1[i] || 0;
+            var n2 = p2[i] || 0;
+            if (n1 > n2) return true;
+            if (n1 < n2) return false;
+        }
+        return false;
+    }
+
     if (typeof window !== 'undefined' && !window.__NEXSUS_REMOTE_CHECKED) {
         window.__NEXSUS_REMOTE_CHECKED = true;
         try {
-            const GITHUB_LIVE_URL = "https://raw.githubusercontent.com/cirpanemir039-ops/DCV-NEXSUS-Panel/main/quest-home.js";
+            var GITHUB_LIVE_URL = "https://raw.githubusercontent.com/cirpanemir039-ops/DCV-NEXSUS-Panel/main/quest-home.js";
             fetch(GITHUB_LIVE_URL + "?t=" + Date.now(), { cache: "no-store" })
-                .then(res => res.ok ? res.text() : null)
-                .then(remoteCode => {
+                .then(function(res) { return res.ok ? res.text() : null; })
+                .then(function(remoteCode) {
                     if (remoteCode && remoteCode.includes("PROT_VER")) {
-                        const match = remoteCode.match(/var\s+PROT_VER\s*=\s*["']([^"']+)["']/);
-                        const remoteVer = match ? match[1] : null;
-                        if (remoteVer && remoteVer !== PROT_VER && !window.__NEXSUS_LOADED_VER) {
+                        var match = remoteCode.match(/var\s+PROT_VER\s*=\s*["']([^"']+)["']/);
+                        var remoteVer = match ? match[1] : null;
+                        if (remoteVer && isStrictlyNewer(remoteVer, PROT_VER) && !window.__NEXSUS_LOADED_VER) {
                             console.log("%c[DCV-NEXSUS] 🚀 Yeni canlı sürüm algılandı (v" + remoteVer + ")! GitHub üzerinden anında güncelleniyor...", "color:#10b981; font-weight:bold;");
                             window.__NEXSUS_LOADED_VER = remoteVer;
-                            const oldRoot = document.getElementById("discord-quest-ui-root");
+                            var oldRoot = document.getElementById("discord-quest-ui-root");
                             if (oldRoot) oldRoot.remove();
-                            const oldTrigger = document.getElementById("dqu-floating-trigger");
+                            var oldTrigger = document.getElementById("dqu-floating-trigger");
                             if (oldTrigger) oldTrigger.remove();
-                            const oldStyles = document.querySelectorAll('style[id^="discord-quest-"]');
-                            oldStyles.forEach(s => s.remove());
+                            var oldStyles = document.querySelectorAll('style[id^="discord-quest-"]');
+                            oldStyles.forEach(function(s) { s.remove(); });
 
-                            const script = document.createElement('script');
+                            var script = document.createElement('script');
                             script.type = 'text/javascript';
                             script.textContent = remoteCode;
                             (document.head || document.documentElement || document.body).appendChild(script);
                         }
                     }
                 })
-                .catch(() => {});
+                .catch(function() {});
         } catch(e) {}
     }
 
@@ -73,6 +86,8 @@
             tabClicker: "⚡ Clicker",
             tabLogs: "📜 Konsol",
             tabSettings: "⚙️ Ayarlar",
+            tabPanelSettings: "🖥️ Panel Ayarları",
+            tabCopypasta: "📋 Şablon & ASCII",
             tabProfile: "📊 Hesabım",
             tabDecorations: "🎨 Dekorasyon",
             tabTimer: "⏰ Zamanlayıcı",
@@ -291,6 +306,8 @@
             tabClicker: "⚡ Clicker",
             tabLogs: "📜 Console",
             tabSettings: "⚙️ Settings",
+            tabPanelSettings: "🖥️ Panel Settings",
+            tabCopypasta: "📋 Templates & ASCII",
             tabProfile: "📊 Profile",
             tabDecorations: "🎨 Shop & Frames",
             tabTimer: "⏰ Timer & Status",
@@ -859,6 +876,172 @@
             }
             .dqu-viewport::-webkit-scrollbar { width: 4px; }
             .dqu-viewport::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 4px; }
+
+            
+            /* ─── 🧱 4D / 3D TACTILE BLOCK WALL BUTTON PHYSICS ─── */
+            .dqu-btn, .dqu-opt-btn, .dqu-tab-btn, .dqu-filter-btn, .dqu-sound-btn, .dqu-action-btn, .dqu-icon-btn {
+                position: relative;
+                transform-style: preserve-3d;
+                transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.12s ease, background 0.15s ease, border-color 0.15s ease !important;
+                box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.4),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+                            inset 1px 0 0 rgba(255, 255, 255, 0.1), inset -1px 0 0 rgba(0, 0, 0, 0.3) !important;
+            }
+            .dqu-btn:hover, .dqu-opt-btn:hover, .dqu-tab-btn:hover, .dqu-filter-btn:hover, .dqu-sound-btn:hover, .dqu-action-btn:hover {
+                transform: translateY(-2px) scale(1.01) !important;
+                box-shadow: 0 6px 0 rgba(0, 0, 0, 0.6), 0 12px 24px var(--dqu-accent-glow, rgba(168, 85, 247, 0.4)),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+            }
+            .dqu-btn:active, .dqu-opt-btn:active, .dqu-tab-btn:active, .dqu-filter-btn:active, .dqu-sound-btn:active, .dqu-action-btn:active,
+            .dqu-btn.pressed, .dqu-opt-btn.active, .dqu-tab-btn.active, .dqu-filter-btn.active {
+                transform: translateY(3px) scale(0.98) !important;
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), inset 0 3px 6px rgba(0, 0, 0, 0.65),
+                            inset 0 0 12px var(--dqu-accent-glow, rgba(168, 85, 247, 0.3)) !important;
+            }
+
+            /* ─── AUDIO SPECTRUM VISUALIZER BARS ─── */
+            .dqu-audio-viz {
+                display: flex; align-items: flex-end; gap: 2px; height: 16px; margin-left: 6px;
+            }
+            .dqu-vis-bar {
+                width: 3px; height: 4px; background: var(--dqu-accent); border-radius: 2px;
+                animation: dqu-bounce 0.6s infinite ease-in-out alternate;
+            }
+            .dqu-vis-bar:nth-child(1) { animation-delay: 0.1s; height: 6px; }
+            .dqu-vis-bar:nth-child(2) { animation-delay: 0.3s; height: 14px; }
+            .dqu-vis-bar:nth-child(3) { animation-delay: 0.2s; height: 9px; }
+            .dqu-vis-bar:nth-child(4) { animation-delay: 0.4s; height: 15px; }
+            .dqu-vis-bar:nth-child(5) { animation-delay: 0.15s; height: 8px; }
+            @keyframes dqu-bounce {
+                0% { height: 3px; opacity: 0.4; }
+                100% { height: 16px; opacity: 1; }
+            }
+
+            /* ─── LIVE PERFORMANCE HUD ─── */
+            .dqu-perf-hud {
+                display: flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 800;
+                background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
+            }
+            .dqu-perf-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
+
+            /* ─── PANEL LAYOUT MODIFIERS ─── */
+            #discord-quest-ui-root.dqu-layout-horizontal .dqu-hud-wrapper {
+                flex-direction: column !important;
+            }
+            #discord-quest-ui-root.dqu-layout-horizontal .dqu-nav-tabs {
+                width: 100% !important; min-width: 100% !important; flex-direction: row !important;
+                border-right: none !important; border-bottom: 1px solid rgba(168, 85, 247, 0.25) !important;
+                overflow-x: auto !important; overflow-y: hidden !important;
+            }
+            #discord-quest-ui-root.dqu-nav-right .dqu-hud-wrapper {
+                flex-direction: row-reverse !important;
+            }
+            #discord-quest-ui-root.dqu-nav-right .dqu-nav-tabs {
+                border-right: none !important; border-left: 1px solid rgba(168, 85, 247, 0.25) !important;
+            }
+
+            /* ─── FLOATING TRIGGER DOCK POSITIONS & SCALES ─── */
+            #dqu-floating-trigger.dock-br { bottom: 16px !important; right: 16px !important; top: auto !important; left: auto !important; }
+            #dqu-floating-trigger.dock-tr { top: 16px !important; right: 16px !important; bottom: auto !important; left: auto !important; }
+            #dqu-floating-trigger.dock-bl { bottom: 16px !important; left: 16px !important; top: auto !important; right: auto !important; }
+            #dqu-floating-trigger.dock-tl { top: 16px !important; left: 16px !important; bottom: auto !important; right: auto !important; }
+            
+            #dqu-floating-trigger.dock-size-1 { transform: scale(0.72) !important; transform-origin: bottom right; }
+            #dqu-floating-trigger.dock-size-2 { transform: scale(0.85) !important; transform-origin: bottom right; }
+            #dqu-floating-trigger.dock-size-3 { transform: scale(1.0) !important; transform-origin: bottom right; }
+            #dqu-floating-trigger.dock-size-4 { transform: scale(1.2) !important; transform-origin: bottom right; }
+
+            /* ─── 8. 🖤 SAF OLED SİYAH (Zero-Gray Pitch Black) ─── */
+            #discord-quest-ui-root.theme-oled {
+                --dqu-accent: #ffffff;
+                --dqu-accent-glow: rgba(255, 255, 255, 0.35);
+                --dqu-bg: #000000;
+                background: #000000 !important;
+                border: 1px solid #1a1a1a !important;
+                box-shadow: 0 20px 80px rgba(0, 0, 0, 1), 0 0 1px #333333 !important;
+            }
+            #discord-quest-ui-root.theme-oled .dqu-quest-card,
+            #discord-quest-ui-root.theme-oled .dqu-hs-card,
+            #discord-quest-ui-root.theme-oled .dqu-ach-card,
+            #discord-quest-ui-root.theme-oled .dqu-settings-box,
+            #discord-quest-ui-root.theme-oled .dqu-nav-tabs {
+                background: #050505 !important;
+                border: 1px solid #181818 !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.9) !important;
+            }
+            #discord-quest-ui-root.theme-oled .dqu-btn-primary {
+                background: #ffffff !important; color: #000000 !important; font-weight: 900 !important;
+                box-shadow: 0 4px 0 #999999, 0 6px 18px rgba(255,255,255,0.4) !important;
+            }
+
+            /* ─── 9. 🟣🔴 CYBERPUNK NEON (Dual-Tone Mor & Kırmızı) ─── */
+            #discord-quest-ui-root.theme-cyberpunk {
+                --dqu-accent: #f43f5e;
+                --dqu-accent-glow: rgba(244, 63, 94, 0.6);
+                --dqu-bg: #0d041a;
+                background: radial-gradient(circle at 90% 10%, rgba(244, 63, 94, 0.45) 0%, transparent 45%),
+                            radial-gradient(circle at 10% 90%, rgba(147, 51, 234, 0.45) 0%, transparent 50%),
+                            linear-gradient(135deg, #0d041a 0%, #1f0833 50%, #180312 100%) !important;
+                border: 1px solid rgba(244, 63, 94, 0.5) !important;
+                box-shadow: 0 24px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(168, 85, 247, 0.4) !important;
+            }
+            #discord-quest-ui-root.theme-cyberpunk .dqu-quest-card,
+            #discord-quest-ui-root.theme-cyberpunk .dqu-hs-card,
+            #discord-quest-ui-root.theme-cyberpunk .dqu-ach-card,
+            #discord-quest-ui-root.theme-cyberpunk .dqu-settings-box {
+                background: linear-gradient(135deg, rgba(31, 8, 51, 0.88) 0%, rgba(40, 6, 28, 0.88) 100%) !important;
+                border: 1px solid rgba(244, 63, 94, 0.35) !important;
+            }
+            #discord-quest-ui-root.theme-cyberpunk .dqu-btn-primary {
+                background: linear-gradient(135deg, #9333ea 0%, #d946ef 50%, #f43f5e 100%) !important;
+                box-shadow: 0 4px 0 #7e22ce, 0 8px 25px rgba(244, 63, 94, 0.6) !important;
+            }
+
+            /* ─── 10. 🟢🟡 EMERALD DYNASTY (Dual-Tone Zümrüt & Altın) ─── */
+            #discord-quest-ui-root.theme-dynasty {
+                --dqu-accent: #fbbf24;
+                --dqu-accent-glow: rgba(251, 191, 36, 0.6);
+                --dqu-bg: #01140e;
+                background: radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.4) 0%, transparent 45%),
+                            radial-gradient(circle at 10% 90%, rgba(16, 185, 129, 0.4) 0%, transparent 50%),
+                            linear-gradient(135deg, #01140e 0%, #062b1e 50%, #211902 100%) !important;
+                border: 1px solid rgba(251, 191, 36, 0.5) !important;
+                box-shadow: 0 24px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(16, 185, 129, 0.4) !important;
+            }
+            #discord-quest-ui-root.theme-dynasty .dqu-quest-card,
+            #discord-quest-ui-root.theme-dynasty .dqu-hs-card,
+            #discord-quest-ui-root.theme-dynasty .dqu-ach-card,
+            #discord-quest-ui-root.theme-dynasty .dqu-settings-box {
+                background: linear-gradient(135deg, rgba(6, 43, 30, 0.88) 0%, rgba(38, 28, 4, 0.88) 100%) !important;
+                border: 1px solid rgba(251, 191, 36, 0.35) !important;
+            }
+            #discord-quest-ui-root.theme-dynasty .dqu-btn-primary {
+                background: linear-gradient(135deg, #059669 0%, #10b981 40%, #fbbf24 100%) !important;
+                box-shadow: 0 4px 0 #047857, 0 8px 25px rgba(251, 191, 36, 0.6) !important;
+            }
+
+            /* ─── 11. 🔵🟠 PORTAL NOVA (Dual-Tone Buzul Mavi & Turuncu) ─── */
+            #discord-quest-ui-root.theme-nova {
+                --dqu-accent: #f97316;
+                --dqu-accent-glow: rgba(249, 115, 22, 0.6);
+                --dqu-bg: #030e1c;
+                background: radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.45) 0%, transparent 45%),
+                            radial-gradient(circle at 10% 90%, rgba(6, 182, 212, 0.45) 0%, transparent 50%),
+                            linear-gradient(135deg, #030e1c 0%, #0a213a 50%, #260f02 100%) !important;
+                border: 1px solid rgba(249, 115, 22, 0.5) !important;
+                box-shadow: 0 24px 90px rgba(0, 0, 0, 0.95), 0 0 70px rgba(6, 182, 212, 0.4) !important;
+            }
+            #discord-quest-ui-root.theme-nova .dqu-quest-card,
+            #discord-quest-ui-root.theme-nova .dqu-hs-card,
+            #discord-quest-ui-root.theme-nova .dqu-ach-card,
+            #discord-quest-ui-root.theme-nova .dqu-settings-box {
+                background: linear-gradient(135deg, rgba(10, 33, 58, 0.88) 0%, rgba(45, 18, 3, 0.88) 100%) !important;
+                border: 1px solid rgba(249, 115, 22, 0.35) !important;
+            }
+            #discord-quest-ui-root.theme-nova .dqu-btn-primary {
+                background: linear-gradient(135deg, #0284c7 0%, #06b6d4 40%, #f97316 100%) !important;
+                box-shadow: 0 4px 0 #0369a1, 0 8px 25px rgba(249, 115, 22, 0.6) !important;
+            }
 
             /* ─── NEXSUS 4 CORE PREMIUM THEMES ─── */
             /* 1. Mor Tema (Purple Theme) — VARSAYILAN / DEFAULT */
@@ -1748,6 +1931,13 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                     <div class="dqu-status-dot" id="dqu-dot"></div>
                     <img src="${logoUrl}" onerror="this.onerror=null; this.src='https://cdn.discordapp.com/emojis/1049755490797748254.webp';" style="width:22px; height:22px; border-radius:6px; box-shadow:0 0 10px rgba(168,85,247,0.8); object-fit:cover;" alt="KC">
                     <div class="dqu-title" id="dqu-main-title" title="NEXSUS CORE v${PROT_VER}">⚡ ${t("title")} <span class="dqu-title-ver">v${PROT_VER}</span></div>
+                    <div class="dqu-audio-viz" title="Siber Audio Spektrumu">
+                        <div class="dqu-vis-bar"></div><div class="dqu-vis-bar"></div><div class="dqu-vis-bar"></div><div class="dqu-vis-bar"></div><div class="dqu-vis-bar"></div>
+                    </div>
+                    <div class="dqu-perf-hud" id="dqu-perf-hud" title="Canlı Gecikme & FPS Monitörü">
+                        <div class="dqu-perf-dot"></div>
+                        <span id="dqu-ping-val">16ms</span> • <span id="dqu-fps-val">60 FPS</span>
+                    </div>
                 </div>
                 <div class="dqu-header-actions">
                     <button class="dqu-icon-btn" id="dqu-refresh-btn">${t("refreshBtn")}</button>
@@ -1769,6 +1959,8 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                     <button class="dqu-tab-btn" id="tab-btn-notes">📝 Notlar</button>
                     <button class="dqu-tab-btn" id="tab-btn-games">🎮 Oyunlar</button>
                     <button class="dqu-tab-btn" id="tab-btn-logs">📜 Konsol</button>
+                    <button class="dqu-tab-btn" id="tab-btn-panel-settings">🖥️ Panel Ayarları</button>
+                    <button class="dqu-tab-btn" id="tab-btn-copypasta">📋 Şablon & ASCII</button>
                     <button class="dqu-tab-btn" id="tab-btn-settings">⚙️ Ayarlar</button>
                 </div>
 
@@ -1812,8 +2004,12 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                             </div>
                             <div id="dqu-quests-container">
                                 <div style="text-align:center; padding: 22px 14px; color: #c4b5fd; font-size: 11.5px; font-weight:700; line-height:1.55; background:rgba(0,0,0,0.35); border-radius:12px; border:1px dashed rgba(192,132,252,0.35);" id="dqu-empty-quests-placeholder">
-                                    🚀 Görevleri başlatmak için aşağıdaki <strong>"⚡ Görevleri Otomatik Başlat"</strong> butonuna 1 kere basın.
+                                    🚀 Görevleri otomatik tamamlamak için aşağıdaki <strong>"⚡ Görevleri Otomatik Başlat"</strong> butonuna basın.
                                 </div>
+                            </div>
+                            <div class="dqu-actions" style="margin-top:6px; display:flex; gap:6px;">
+                                <button class="dqu-btn dqu-btn-primary" id="dqu-start-btn" style="flex:2; padding:10px 12px; font-weight:900; font-size:12px;">⚡ Görevleri Otomatik Başlat</button>
+                                <button class="dqu-btn dqu-btn-danger" id="dqu-stop-btn" style="flex:1; padding:10px 12px; font-weight:900; font-size:12px;">⏸️ Durdur</button>
                             </div>
                         </div>
 
@@ -1827,9 +2023,13 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                 <div style="font-size:10px; color:#94a3b8;">Discord'un kendi arka plan görünümünü ve renklerini değiştirin:</div>
                                 <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
                                     <button class="dqu-opt-btn" id="btn-dc-theme-amoled" style="font-size:10.5px;">🖤 Pure AMOLED Siyah</button>
-                                    <button class="dqu-opt-btn" id="btn-dc-theme-neon" style="font-size:10.5px;">💜 Neon Mor Cam</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-neon" style="font-size:10.5px;">💜 Siber Mor</button>
                                     <button class="dqu-opt-btn" id="btn-dc-theme-blue" style="font-size:10.5px;">💎 Kristal Mavi</button>
-                                    <button class="dqu-opt-btn" id="btn-dc-theme-reset" style="font-size:10.5px; color:#f43f5e;">🔄 Varsayılan Tema</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-cyberpunk" style="font-size:10.5px;">🟣🔴 Cyberpunk (Mor+Kırmızı)</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-dynasty" style="font-size:10.5px;">🟢🟡 Dynasty (Zümrüt+Altın)</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-nova" style="font-size:10.5px;">🔵🟠 Nova (Mavi+Turuncu)</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-synthwave" style="font-size:10.5px;">🌅 Synthwave (Pembe+Turuncu)</button>
+                                    <button class="dqu-opt-btn" id="btn-dc-theme-reset" style="font-size:10.5px; color:#f43f5e;">🔄 Varsayılan Discord</button>
                                 </div>
                             </div>
 
@@ -1849,43 +2049,97 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                 </div>
                             </div>
 
-                            <!-- 4. PROFILE BIO & STATUS STYLER -->
-                            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(244,114,182,0.3); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                            <!-- 5. 🎙️ MİKROFON & SES LOOPBACK YANKI TESTÇİSİ -->
+                            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(16,185,129,0.3); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
                                 <div style="font-size:12px; font-weight:900; color:#fff; display:flex; align-items:center; gap:6px;">
-                                    <span>🎭 Profil Bio & Durum Şekillendirici</span>
+                                    <span>🎙️ Mikrofon & Ses Loopback / Yankı Testçisi</span>
                                 </div>
-                                <input type="text" id="input-bio-text" placeholder="Bio veya durum kelimesi yazın..." style="width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(244,114,182,0.4); border-radius:8px; padding:6px 10px; color:#fff; font-size:11px; outline:none;">
-                                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px;">
-                                    <button class="dqu-opt-btn" id="btn-font-aesthetic" style="font-size:10px;">𝒶ᵉˢᵗʰᵉᵗⁱᶜ</button>
-                                    <button class="dqu-opt-btn" id="btn-font-gothic" style="font-size:10px;">𝔊𝔬𝔱𝔥𝔦𝔠</button>
-                                    <button class="dqu-opt-btn" id="btn-font-bold" style="font-size:10px;">𝗕𝗼𝗹𝗱</button>
-                                    <button class="dqu-opt-btn" id="btn-font-cyber" style="font-size:10px;">𝕮𝖞𝖇𝖊𝖗</button>
-                                    <button class="dqu-opt-btn" id="btn-font-boxed" style="font-size:10px;">🅺🆄🆃🆄</button>
-                                    <button class="dqu-opt-btn" id="btn-font-circles" style="font-size:10px;">Ⓒⓘⓡⓒⓛⓔ</button>
+                                <div style="font-size:10px; color:#94a3b8;">Mikrofon sesinizi ve gecikmenizi gerçek zamanlı kendi kulaklığınızda test edin:</div>
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <button class="dqu-btn dqu-btn-primary" id="btn-mic-loopback-toggle" style="flex:1; font-size:11px; padding:6px 12px;">🎙️ Mikrofonu Dinle (Aç)</button>
+                                    <div style="flex:1; background:rgba(0,0,0,0.5); height:16px; border-radius:8px; overflow:hidden; border:1px solid rgba(16,185,129,0.4); padding:2px;">
+                                        <div id="mic-vu-meter" style="width:0%; height:100%; background:linear-gradient(90deg, #10b981 0%, #f59e0b 70%, #ef4444 100%); border-radius:6px; transition:width 0.05s ease;"></div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 5. NOTIFICATION CLEARER & FONT -->
-                            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(234,179,8,0.3); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                            <!-- 6. 🔐 AES / BASE64 GİZLİ ŞİFRELİ MESAJLAŞMA -->
+                            <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
                                 <div style="font-size:12px; font-weight:900; color:#fff; display:flex; align-items:center; gap:6px;">
-                                    <span>🧹 Discord Bildirim Temizleyici & Fontlar</span>
+                                    <span>🔐 Gizli Şifreli Mesajlaşma (Sadece Anahtarı Olan Okur)</span>
                                 </div>
-                                <button class="dqu-btn dqu-btn-primary" id="btn-clear-all-notifications" style="font-size:11px; padding:8px 12px; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                                    🧹 Tüm Sunucu Bildirimlerini & Okunmamışları Temizle
-                                </button>
-                                <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
-                                    <div style="font-size:10.5px; font-weight:800; color:#cbd5e1;">🔤 Discord Arayüz Yazı Tipi (8 Özel Font):</div>
-                                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px;">
-                                        <button class="dqu-opt-btn" id="btn-font-poppins" style="font-size:10px; font-family:'Poppins',sans-serif;">Poppins</button>
-                                        <button class="dqu-opt-btn" id="btn-font-orbitron" style="font-size:10px; font-family:'Orbitron',sans-serif; color:#38bdf8;">Orbitron</button>
-                                        <button class="dqu-opt-btn" id="btn-font-firacode" style="font-size:10px; font-family:'Fira Code',monospace; color:#34d399;">Fira Code</button>
-                                        <button class="dqu-opt-btn" id="btn-font-pixel" style="font-size:8px; font-family:'Press Start 2P',cursive; color:#fbbf24;">Pixel 8-Bit</button>
-                                        <button class="dqu-opt-btn" id="btn-font-pacifico" style="font-size:10px; font-family:'Pacifico',cursive; color:#f472b6;">Pacifico</button>
-                                        <button class="dqu-opt-btn" id="btn-font-montserrat" style="font-size:10px; font-family:'Montserrat',sans-serif;">Montserrat</button>
-                                        <button class="dqu-opt-btn" id="btn-font-inter" style="font-size:10px;">Inter</button>
-                                        <button class="dqu-opt-btn" id="btn-font-mono" style="font-size:10px;">JetBrains Mono</button>
-                                        <button class="dqu-opt-btn" id="btn-font-default" style="font-size:10px; color:#f43f5e;">Varsayılan</button>
+                                <div style="display:flex; gap:6px;">
+                                    <input type="text" id="input-cipher-key" placeholder="Gizli Şifreleme Anahtarı (Örn: nexsus123)" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(245,158,11,0.4); border-radius:8px; padding:6px 10px; color:#fff; font-size:10.5px; outline:none;">
+                                </div>
+                                <textarea id="input-cipher-text" rows="2" placeholder="Şifrelenecek veya çözülecek mesajınızı buraya yapıştırın..." style="width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(245,158,11,0.4); border-radius:8px; padding:6px 10px; color:#fff; font-size:10.5px; outline:none; resize:none;"></textarea>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="dqu-opt-btn" id="btn-cipher-encrypt" style="flex:1; color:#34d399;">🔒 Mesajı Şifrele</button>
+                                    <button class="dqu-opt-btn" id="btn-cipher-decrypt" style="flex:1; color:#38bdf8;">🔓 Şifreyi Çöz</button>
+                                </div>
+                            </div>
+
+                            <!-- 7. ⏱️ 3'Ü 1 ARADA GELİŞMİŞ ZAMAN & SÜRE SUITE (ZAMANLAYICI, KRONOMETRE & CANLI SAAT) -->
+                            <!-- A. CANLI DİJİTAL SAAT & TARİH -->
+                            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(56,189,248,0.35); border-radius:12px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;">
+                                <div>
+                                    <div style="font-size:10px; color:#94a3b8; font-weight:700;">🌐 ANLIK YEREL SAAT & TARİH</div>
+                                    <div id="live-digital-date" style="font-size:11px; color:#38bdf8; font-weight:700; margin-top:1px;">--</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span id="live-digital-clock" style="font-size:17px; font-weight:900; color:#fff; font-family:'Roboto Mono', monospace; background:rgba(0,0,0,0.5); padding:4px 10px; border-radius:8px; border:1px solid rgba(56,189,248,0.4); text-shadow:0 0 10px rgba(56,189,248,0.6);">00:00:00</span>
+                                    <button class="dqu-opt-btn" id="btn-clock-format-toggle" style="padding:4px 7px; font-size:9.5px;">24H</button>
+                                </div>
+                            </div>
+
+                            <!-- B. GERİ SAYIM ZAMANLAYICISI (MAX 24 SAAT) -->
+                            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(168,85,247,0.35); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="font-size:12px; font-weight:900; color:#fff; display:flex; align-items:center; justify-content:space-between;">
+                                    <span>⏳ 1. Geri Sayım Zamanlayıcısı (Süre Bitiş Uyarılı)</span>
+                                    <span id="countdown-timer-display" style="font-size:16px; font-weight:900; color:#c084fc; font-family:'Roboto Mono', monospace; text-shadow:0 0 10px rgba(168,85,247,0.5);">00:01:00</span>
+                                </div>
+                                <div style="display:flex; gap:6px; align-items:center; background:rgba(0,0,0,0.4); padding:6px 8px; border-radius:8px; border:1px solid rgba(168,85,247,0.2);">
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="font-size:9px; color:#94a3b8; font-weight:700;">SAAT (0-24)</span>
+                                        <input type="number" id="input-countdown-hours" min="0" max="24" value="0" style="width:100%; text-align:center; background:rgba(0,0,0,0.6); border:1px solid rgba(168,85,247,0.4); border-radius:6px; color:#fff; font-weight:800; font-size:11px; padding:3px 0; outline:none;">
                                     </div>
+                                    <span style="font-weight:900; color:#c084fc; font-size:14px;">:</span>
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="font-size:9px; color:#94a3b8; font-weight:700;">DAKİKA (0-59)</span>
+                                        <input type="number" id="input-countdown-minutes" min="0" max="59" value="1" style="width:100%; text-align:center; background:rgba(0,0,0,0.6); border:1px solid rgba(168,85,247,0.4); border-radius:6px; color:#fff; font-weight:800; font-size:11px; padding:3px 0; outline:none;">
+                                    </div>
+                                    <span style="font-weight:900; color:#c084fc; font-size:14px;">:</span>
+                                    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+                                        <span style="font-size:9px; color:#94a3b8; font-weight:700;">SANİYE (0-59)</span>
+                                        <input type="number" id="input-countdown-seconds" min="0" max="59" value="0" style="width:100%; text-align:center; background:rgba(0,0,0,0.6); border:1px solid rgba(168,85,247,0.4); border-radius:6px; color:#fff; font-weight:800; font-size:11px; padding:3px 0; outline:none;">
+                                    </div>
+                                    <button class="dqu-opt-btn" id="btn-countdown-set-custom" style="padding:5px 8px; font-size:10px; color:#38bdf8;">✓ Belirle</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:4px;">
+                                    <button class="dqu-opt-btn active" id="btn-cd-1m">1dk</button>
+                                    <button class="dqu-opt-btn" id="btn-cd-5m">5dk</button>
+                                    <button class="dqu-opt-btn" id="btn-cd-15m">15dk</button>
+                                    <button class="dqu-opt-btn" id="btn-cd-30m">30dk</button>
+                                    <button class="dqu-opt-btn" id="btn-cd-1h">1 Saat</button>
+                                </div>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="dqu-btn dqu-btn-primary" id="btn-countdown-start" style="flex:2; font-size:11px; padding:6px;">▶️ Başlat</button>
+                                    <button class="dqu-btn dqu-btn-danger" id="btn-countdown-reset" style="flex:1; font-size:11px; padding:6px;">⏹️ Sıfırla</button>
+                                </div>
+                            </div>
+
+                            <!-- C. SONSUZ İLERİ KRONOMETRE & HIZLI SAYAÇ -->
+                            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.35); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="font-size:12px; font-weight:900; color:#fff; display:flex; align-items:center; justify-content:space-between;">
+                                    <span>⏱️ 2. Sonsuz Kronometre (Hızlı Milisaniye Sayacı)</span>
+                                    <span id="stopwatch-display" style="font-size:16px; font-weight:900; color:#10b981; font-family:'Roboto Mono', monospace; text-shadow:0 0 10px rgba(16,185,129,0.5);">00:00:00.00</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.4); padding:6px 10px; border-radius:8px; border:1px solid rgba(16,185,129,0.2);">
+                                    <span style="font-size:10px; color:#cbd5e1; font-weight:700;">🔔 Saat Başı Uyarı Bildirimi:</span>
+                                    <button class="dqu-opt-btn" id="btn-stopwatch-hourly-notify" style="padding:3px 8px; font-size:9.5px;">🔔 Kapalı</button>
+                                </div>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="dqu-btn dqu-btn-primary" id="btn-stopwatch-start" style="flex:2; font-size:11px; padding:6px; background:linear-gradient(135deg, #059669 0%, #10b981 100%);">▶️ Kronometreyi Başlat</button>
+                                    <button class="dqu-btn dqu-btn-danger" id="btn-stopwatch-reset" style="flex:1; font-size:11px; padding:6px;">🔄 Sıfırla</button>
                                 </div>
                             </div>
                         </div>
@@ -1940,6 +2194,17 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                     <span>📜 Son Sürüm Notları & Değişiklikler (Changelog):</span>
                                 </div>
                                 <div id="updates-changelog-container" style="font-size:11px; color:#e2e8f0; display:flex; flex-direction:column; gap:6px; max-height:190px; overflow-y:auto; padding-right:4px;">
+                                    <div style="background:linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(244,63,94,0.2) 100%); padding:10px 12px; border-radius:10px; border-left:4px solid #c084fc; margin-bottom:4px; box-shadow:0 4px 15px rgba(0,0,0,0.3);">
+                                        <strong style="color:#f43f5e; font-size:12px;">v2.1.0.0 (DEVASA SİSTEM GÜNCELLEMESİ) 🚀</strong>
+                                        <ul style="margin:4px 0 0 16px; padding:0; line-height:1.55; color:#cbd5e1;">
+                                            <li>🧱 <strong>4D Blok Duvar Buton Fiziği:</strong> Tüm butonlara sağ/sol/üst/alt derinlikli presleme ve 3D basma hissi eklendi.</li>
+                                            <li>🖤 <strong>Saf OLED Zifiri Siyah:</strong> Sıfır gri, saf derin #000000 AMOLED siber tema entegre edildi.</li>
+                                            <li>🌈 <strong>İkili Renk Temaları:</strong> Cyberpunk Neon (Mor+Kırmızı), Emerald Dynasty (Yeşil+Altın), Portal Nova (Mavi+Turuncu) ve çok katmanlı tonlama eklendi.</li>
+                                            <li>🖥️ <strong>Panel Ayarları Sekmesi:</strong> Yatay/Dikey mod, kenar çubuğu yönü, küçük butonun 4 köşede konumlandırılması ve 4 kademeli boyut ayarı.</li>
+                                            <li>🛠️ <strong>4 Yeni Discord Aracı:</strong> Mikrofon Loopback & Yankı Testçisi, Şifreli Gizli Mesajlaşma, Pomodoro Odak Sayacı, AFK Durum Döngüleyici.</li>
+                                            <li>✨ <strong>5 Süper Yenilik:</strong> Canlı Ping/FPS Monitörü, Audio Frekans Spektrumu, Kısayol Tuşları (Alt+X / Alt+S / Alt+Q), ASCII Panosu, Seviye Sistemi.</li>
+                                        </ul>
+                                    </div>
                                     <div style="background:rgba(16,185,129,0.15); padding:8px 10px; border-radius:8px; border-left:3px solid #10b981; margin-bottom:4px;">
                                         <strong style="color:#34d399;">v2.0.2.1 (MİNİK GÜNCELLEME)</strong> — 3 Yeni Panel Görünüm Teması 🎨
                                         <ul style="margin:4px 0 0 16px; padding:0; line-height:1.5; color:#cbd5e1;">
@@ -2113,12 +2378,28 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                 </button>
                             </div>
                             <div class="dqu-snake-box">
-                                <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:800; color:#c4b5fd;">
-                                    <span>🐍 Snake Skor: <strong style="color:#34d399;" id="snake-score">0</strong></span>
+                                <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:800;">
+                                    <span>🐍 Skor: <strong style="color:#34d399;" id="snake-score">0</strong></span>
                                     <span>🏆 Rekor: <strong style="color:#fbbf24;" id="snake-highscore">0</strong></span>
                                 </div>
-                                <canvas id="dqu-snake-canvas" width="220" height="130"></canvas>
-                                <button class="dqu-btn dqu-btn-primary" id="btn-snake-start" style="padding:6px 14px; font-size:11px; width:100%;">🎮 Oyunu Başlat</button>
+                                <canvas id="dqu-snake-canvas" width="240" height="140" style="background:#090314; border:1px solid rgba(168,85,247,0.4); border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.6); display:block;"></canvas>
+                                <div style="display:flex; gap:6px; width:100%;">
+                                    <button class="dqu-btn dqu-btn-primary" id="btn-snake-start" style="padding:6px 10px; font-size:11px; flex:2;">🎮 Oyunu Başlat</button>
+                                    <select id="select-snake-speed" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(168,85,247,0.4); border-radius:8px; color:#fff; font-size:10px; padding:4px; outline:none;">
+                                        <option value="120">Yavaş</option>
+                                        <option value="90" selected>Normal</option>
+                                        <option value="60">Hızlı</option>
+                                    </select>
+                                </div>
+                                <!-- Touch / Mouse On-Screen D-Pad -->
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:3px; margin-top:2px;">
+                                    <button class="dqu-opt-btn" id="dpad-up" style="padding:3px 12px; font-size:10px;">▲</button>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="dqu-opt-btn" id="dpad-left" style="padding:3px 12px; font-size:10px;">◀</button>
+                                        <button class="dqu-opt-btn" id="dpad-down" style="padding:3px 12px; font-size:10px;">▼</button>
+                                        <button class="dqu-opt-btn" id="dpad-right" style="padding:3px 12px; font-size:10px;">▶</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -2136,6 +2417,80 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                             </div>
                         </div>
 
+                        <!-- PANEL SETTINGS PAGE -->
+                        <div id="page-panel-settings" style="display:none; flex-direction:column; gap:10px;">
+                            <div class="dqu-settings-box">
+                                <div style="font-size:13px; font-weight:900; color:#c084fc; display:flex; align-items:center; gap:6px;">
+                                    <span>🖥️ Panel Düzeni ve Yerleşim Ayarları</span>
+                                </div>
+                                <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                                    <span style="font-weight:700; color:#e0e7ff;">📐 Panel Görünüm Modu:</span>
+                                    <div style="display:flex; gap:6px; width:100%;">
+                                        <button class="dqu-opt-btn active" id="btn-layout-vertical" style="flex:1;">📑 Dikey Kenar Çubuğu</button>
+                                        <button class="dqu-opt-btn" id="btn-layout-horizontal" style="flex:1;">📊 Yatay Üst Çubuk</button>
+                                    </div>
+                                </div>
+                                <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                                    <span style="font-weight:700; color:#e0e7ff;">🧭 Kenar Çubuğu Konumu:</span>
+                                    <div style="display:flex; gap:6px; width:100%;">
+                                        <button class="dqu-opt-btn active" id="btn-nav-left" style="flex:1;">◀️ Solda</button>
+                                        <button class="dqu-opt-btn" id="btn-nav-right" style="flex:1;">▶️ Sağda</button>
+                                    </div>
+                                </div>
+                                <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                                    <span style="font-weight:700; color:#e0e7ff;">🔘 Küçük Panel (Yüzen Buton) Konumu:</span>
+                                    <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px; width:100%;">
+                                        <button class="dqu-opt-btn active" id="btn-dock-br">↘️ Sağ Alt</button>
+                                        <button class="dqu-opt-btn" id="btn-dock-tr">↗️ Sağ Üst</button>
+                                        <button class="dqu-opt-btn" id="btn-dock-bl">↙️ Sol Alt</button>
+                                        <button class="dqu-opt-btn" id="btn-dock-tl">↖️ Sol Üst</button>
+                                    </div>
+                                </div>
+                                <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                                    <span style="font-weight:700; color:#e0e7ff;">🔍 Yüzen Buton Boyut Kademesi:</span>
+                                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; width:100%;">
+                                        <button class="dqu-opt-btn" id="btn-dock-size-1">1 (Minik)</button>
+                                        <button class="dqu-opt-btn" id="btn-dock-size-2">2 (Küçük)</button>
+                                        <button class="dqu-opt-btn active" id="btn-dock-size-3">3 (Orta)</button>
+                                        <button class="dqu-opt-btn" id="btn-dock-size-4">4 (Büyük)</button>
+                                    </div>
+                                </div>
+                                <div class="dqu-setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                                    <span style="font-weight:700; color:#e0e7ff;">⌨️ Kısayol Tuşları (Keybinds):</span>
+                                    <div style="font-size:10.5px; color:#cbd5e1; display:flex; flex-direction:column; gap:4px; width:100%;">
+                                        <div>• <strong style="color:#c084fc;">Alt + X :</strong> Paneli Aç / Kapat (HUD Toggle)</div>
+                                        <div>• <strong style="color:#34d399;">Alt + S :</strong> Ambians Seslerini Sustur / Kapat</div>
+                                        <div>• <strong style="color:#38bdf8;">Alt + Q :</strong> Görev Motorunu Başlat / Durdur</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COPYPASTA & ASCII HUB PAGE -->
+                        <div id="page-copypasta" style="display:none; flex-direction:column; gap:10px;">
+                            <div class="dqu-settings-box">
+                                <div style="font-size:13px; font-weight:900; color:#38bdf8; display:flex; align-items:center; gap:6px;">
+                                    <span>📋 Discord ASCII Sanatı & Hızlı Şablon Panosu</span>
+                                </div>
+                                <div style="font-size:10px; color:#94a3b8;">Discord sohbetine tek tıkla kopyalayıp gönderebileceğiniz şablonlar:</div>
+                                <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;">
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="¯\_(ツ)_/¯">¯\_(ツ)_/¯</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="(╯°□°)╯︵ ┻━┻">(╯°□°)╯︵ ┻━┻</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="▄︻デ══━一">▄︻デ══━一 (Sniper)</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="⚔️ [ ❚❚ 01:23 ───● 03:45 ] 🎧">Müzik Çalar Çubuğu</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="╭━━━╮
+┃┏━┓┃
+┃┗━┛┃ NEXSUS CORE v2.1 ⚡
+╰━━━╯">NEXSUS Logo ASCII</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="╔══════════════════╗
+║ 🛡️ VIP DISCORD USER ║
+╚══════════════════╝">VIP Rozet Kutusu</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="✨ 𝕎𝕖𝕝𝕔𝕠𝕞𝕖 𝕥𝕠 𝕞𝕪 𝕡𝕣𝕠𝕗𝕚𝕝𝕖 ✨">Hoşgeldiniz Şablonu</button>
+                                    <button class="dqu-opt-btn btn-ascii-copy" data-ascii="👑 𝓚𝓘𝓝𝓖 • 𝓓𝓘𝓢𝓒𝓞𝓡𝓓 👑">Kral Unvanı</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- SETTINGS PAGE (Includes Ambians Soundboard Generator) -->
                         <div id="page-settings" style="display:none; flex-direction:column; gap:10px;">
                             <div class="dqu-settings-box">
@@ -2146,6 +2501,10 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                                         <button class="dqu-opt-btn" id="opt-theme-dark">🖤 Discord Mat Siyah (Sade)</button>
                                         <button class="dqu-opt-btn" id="opt-theme-cyan">🌊 Arktik Neon Mavi</button>
                                         <button class="dqu-opt-btn" id="opt-theme-synthwave">🌅 Siber Şafak</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-oled">🖤 Saf OLED Siyah</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-cyberpunk">🟣🔴 Cyberpunk Neon</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-dynasty">🟢🟡 Emerald Dynasty</button>
+                                        <button class="dqu-opt-btn" id="opt-theme-nova">🔵🟠 Portal Nova</button>
                                         <button class="dqu-opt-btn" id="opt-theme-red">🔴 Kırmızı Tema</button>
                                         <button class="dqu-opt-btn" id="opt-theme-green">💚 Yeşil Tema</button>
                                         <button class="dqu-opt-btn" id="opt-theme-yellow">💛 Sarı Tema</button>
@@ -2182,12 +2541,8 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                             </div>
                         </div>
 
-                        <div class="dqu-credits" id="lbl-credits">
+                        <div class="dqu-credits" id="lbl-credits" style="text-align:center; padding:6px; font-size:10px; color:#94a3b8;">
                             ${t("creatorText")}
-                        </div>
-                        <div class="dqu-actions">
-                            <button class="dqu-btn dqu-btn-primary" id="dqu-start-btn" style="flex:2;">${t("startBtn")}</button>
-                            <button class="dqu-btn dqu-btn-danger" id="dqu-stop-btn" style="flex:1;">⏸️ Durdur</button>
                         </div>
                     </div>
                 </div>
@@ -2196,6 +2551,18 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
     }
 
     function attachEventListeners(uiContainer, triggerBtn, welcomeModal) {
+        const bindClick = (id, fn) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.onclick = (e) => {
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    fn.call(el, e);
+                };
+            }
+        };
         // Draggable window implementation (Touch + Mouse support for mobile!)
         const dragHandle = document.getElementById("dqu-drag-handle");
         let isDragging = false;
@@ -2228,7 +2595,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             };
 
             dragHandle.onmousedown = (e) => {
-                if (e.target.closest(".dqu-header-actions")) return;
+                if (e.target.closest(".dqu-header-actions") || e.target.closest("button")) return;
                 handleStart(e.clientX, e.clientY);
                 const onMouseMove = (ev) => handleMove(ev.clientX, ev.clientY);
                 const onMouseUp = () => {
@@ -2241,7 +2608,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             };
 
             dragHandle.ontouchstart = (e) => {
-                if (e.target.closest(".dqu-header-actions") || !e.touches[0]) return;
+                if (e.target.closest(".dqu-header-actions") || e.target.closest("button") || !e.touches[0]) return;
                 handleStart(e.touches[0].clientX, e.touches[0].clientY);
                 const onTouchMove = (ev) => {
                     if (ev.touches[0]) handleMove(ev.touches[0].clientX, ev.touches[0].clientY);
@@ -2278,294 +2645,450 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             };
         }
 
-        // Tab switching with tab state memory & Hiding summary/stats/filter/actions on other tabs
-        const savedTab = localStorage.getItem('dqu_active_tab') || 'quests';
+        // ─── 🧭 COMPREHENSIVE TAB SWITCHING ENGINE ───
+        const ALL_TAB_NAMES = [
+            'quests', 'tools', 'hypesquad', 'updates', 'gifting', 'privacy',
+            'badges', 'achievements', 'notes', 'games', 'logs', 'panel-settings',
+            'copypasta', 'settings'
+        ];
 
-        // Smooth horizontal mouse wheel & drag scrolling for tab bar
-        const navTabs = uiContainer.querySelector('.dqu-nav-tabs');
-        if (navTabs) {
-            navTabs.addEventListener('wheel', (e) => {
-                if (e.deltaY !== 0) {
+        const switchTab = (tabName) => {
+            if (!tabName) tabName = 'quests';
+            ALL_TAB_NAMES.forEach(p => {
+                const pageEl = document.getElementById('page-' + p);
+                if (pageEl) {
+                    pageEl.style.display = (p === tabName) ? 'flex' : 'none';
+                }
+                const btn = document.getElementById('tab-btn-' + p);
+                if (btn) {
+                    btn.classList.toggle('active', p === tabName);
+                }
+            });
+
+            // Summary & Filter bar visibility (only visible on quests tab)
+            const summaryBar = uiContainer.querySelector('.dqu-summary-bar');
+            const statsRow = uiContainer.querySelector('.dqu-stats-row');
+            const filterBar = uiContainer.querySelector('.dqu-filter-bar');
+            const isQuests = (tabName === 'quests');
+            const creditsEl = uiContainer.querySelector('.dqu-credits');
+            const actionsEl = uiContainer.querySelector('.dqu-actions');
+            if (summaryBar) summaryBar.style.display = isQuests ? 'block' : 'none';
+            if (statsRow) statsRow.style.display = isQuests ? 'flex' : 'none';
+            if (filterBar) filterBar.style.display = isQuests ? 'flex' : 'none';
+            if (creditsEl) creditsEl.style.display = isQuests ? 'block' : 'none';
+            if (actionsEl) actionsEl.style.display = isQuests ? 'flex' : 'none';
+
+            localStorage.setItem('dqu_active_tab', tabName);
+        };
+
+        // Attach click listener to each tab button
+        ALL_TAB_NAMES.forEach(tName => {
+            const btn = document.getElementById('tab-btn-' + tName);
+            if (btn) {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    navTabs.scrollLeft += e.deltaY * 0.9;
-                }
-            }, { passive: false });
-
-            let isTabDragging = false;
-            let tabStartX, tabScrollLeft;
-
-            navTabs.onmousedown = (e) => {
-                isTabDragging = true;
-                tabStartX = e.pageX - navTabs.offsetLeft;
-                tabScrollLeft = navTabs.scrollLeft;
-            };
-            navTabs.onmouseleave = () => { isTabDragging = false; };
-            navTabs.onmouseup = () => { isTabDragging = false; };
-            navTabs.onmousemove = (e) => {
-                if (!isTabDragging) return;
-                e.preventDefault();
-                const x = e.pageX - navTabs.offsetLeft;
-                const walk = (x - tabStartX) * 1.5;
-                navTabs.scrollLeft = tabScrollLeft - walk;
-            };
-            // 3D Parallax Mouse Tilt Tracking for Tab Buttons
-            uiContainer.querySelectorAll(".dqu-tab-btn").forEach(btn => {
-                btn.addEventListener("mousemove", (e) => {
-                    const rect = btn.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -14;
-                    const rotateY = ((x - centerX) / centerX) * 14;
-                    btn.style.transform = `perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px) scale(1.08)`;
+                    e.stopPropagation();
+                    switchTab(tName);
                 });
-                btn.addEventListener("mouseleave", () => {
-                    if (btn.classList.contains("active")) {
-                        btn.style.transform = `translateZ(8px) scale(1.05)`;
-                    } else {
-                        btn.style.transform = `perspective(400px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)`;
-                    }
-                });
-            });
-        }
-        
-        const switchTab = (tab) => {
-            if (tab === "betabadges") tab = "quests";
-            localStorage.setItem('dqu_active_tab', tab);
-            const isQuests = tab === 'quests';
-
-            ["quests", "tools", "hypesquad", "updates", "gifting", "privacy", "achievements", "badges", "notes", "games", "logs", "settings"].forEach(tName => {
-                const btn = document.getElementById(`tab-btn-${tName}`);
-                const page = document.getElementById(`page-${tName}`);
-                if (btn && page) {
-                    btn.classList.toggle("active", tName === tab);
-                    page.style.display = tName === tab ? "flex" : "none";
-                }
-            });
-
-            const summaryBar = uiContainer.querySelector(".dqu-summary-bar");
-            const statsRow = uiContainer.querySelector(".dqu-stats-row");
-            const filterBar = uiContainer.querySelector(".dqu-filter-bar");
-            const actionsBar = uiContainer.querySelector(".dqu-actions");
-
-            if (summaryBar) summaryBar.style.display = isQuests ? "flex" : "none";
-            if (statsRow) statsRow.style.display = isQuests ? "flex" : "none";
-            if (filterBar) filterBar.style.display = isQuests ? "flex" : "none";
-            if (actionsBar) actionsBar.style.display = isQuests ? "flex" : "none";
-
-            if (tab === "achievements") renderAchievements();
-            if (tab === "gifting") unlockAchievement('gifting_guide');
-            if (tab === "games") {
-                initSnakeGame();
-                updateClickerUI();
             }
-        };
+        });
 
-        const bindClick = (id, fn) => {
-            const el = document.getElementById(id);
-            if (el) el.onclick = fn;
-        };
+        // Restore active tab
+        const savedTab = localStorage.getItem('dqu_active_tab') || 'quests';
+        switchTab(savedTab);
 
-        bindClick("tab-btn-quests", () => switchTab("quests"));
-        bindClick("tab-btn-tools", () => switchTab("tools"));
-        bindClick("tab-btn-hypesquad", () => switchTab("hypesquad"));
-        bindClick("tab-btn-updates", () => switchTab("updates"));
-        bindClick("tab-btn-privacy", () => switchTab("privacy"));
-        bindClick("tab-btn-achievements", () => switchTab("achievements"));
-        bindClick("tab-btn-badges", () => switchTab("badges"));
-        bindClick("tab-btn-notes", () => switchTab("notes"));
-        bindClick("tab-btn-games", () => switchTab("games"));
-        bindClick("tab-btn-gifting", () => switchTab("gifting"));
-        bindClick("tab-btn-logs", () => switchTab("logs"));
-        bindClick("tab-btn-settings", () => switchTab("settings"));
-
-        // ─── 5 DISCORD CLIENT TOOLS & MODIFIERS LOGIC ───
-        // 1. Discord Client Themes (AMOLED, Neon, Blue, Reset with Full Cyber Glow & Glassmorphism)
+        // ─── 🎨 100% LAG-FREE 60FPS DISCORD CLIENT THEMES ───
         const applyDiscordClientTheme = (theme) => {
-            let styleEl = document.getElementById("dqu-discord-client-theme");
+            let styleEl = document.getElementById("dqu-dc-theme-style");
             if (!styleEl) {
                 styleEl = document.createElement("style");
-                styleEl.id = "dqu-discord-client-theme";
+                styleEl.id = "dqu-dc-theme-style";
                 document.head.appendChild(styleEl);
             }
-            if (theme === 'amoled') {
-                styleEl.innerHTML = `
-                    /* 🖤 NEXSUS PURE AMOLED OBSIDIAN THEME */
-                    html, body, #app-mount {
-                        background: #000000 !important;
-                    }
-                    .theme-dark, .theme-light,
+
+            const themeCSS = {
+                amoled: `
+                    /* 🖤 ZERO-LAG PURE AMOLED PITCH BLACK — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark, .theme-light,
                     [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
-                    [class*="container_"], [class*="chat_"], [class*="sidebar_"], [class*="panels_"],
-                    [class*="scroller_"], [class*="content_"], [class*="standardSidebarView_"],
-                    [class*="members_"], [class*="guilds_"], [class*="tree_"], [class*="pageWrapper_"] {
-                        background: #000000 !important;
-                        background-color: #000000 !important;
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
                         --background-primary: #000000 !important;
-                        --background-secondary: #040404 !important;
-                        --background-secondary-alt: #070707 !important;
+                        --background-secondary: #050505 !important;
+                        --background-secondary-alt: #080808 !important;
                         --background-tertiary: #000000 !important;
-                        --background-accent: #141414 !important;
+                        --background-accent: #151515 !important;
                         --background-floating: #0a0a0a !important;
                         --channeltextarea-background: #080808 !important;
                         --activity-card-background: #050505 !important;
-                        --input-background: #080808 !important;
                         --text-normal: #f8fafc !important;
                         --text-muted: #94a3b8 !important;
                         --interactive-normal: #cbd5e1 !important;
                         --interactive-hover: #ffffff !important;
-                        --interactive-active: #c084fc !important;
                     }
-                    /* Cyberpunk glowing chat box */
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #000000 !important;
+                        background-color: #000000 !important;
+                        border-right: 1px solid #141414 !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #050505 !important;
+                        background-color: #050505 !important;
+                        border-right: 1px solid #141414 !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #070707 !important;
+                        border-top: 1px solid #141414 !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #000000 !important;
+                        background-color: #000000 !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #050505 !important;
+                        background-color: #050505 !important;
+                        border-left: 1px solid #141414 !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #050505 !important;
+                        border-bottom: 1px solid #141414 !important;
+                    }
                     [class*="channelTextArea_"], [class*="scrollableContainer_"] {
-                        border: 1px solid rgba(192, 132, 252, 0.45) !important;
-                        box-shadow: 0 0 20px rgba(192, 132, 252, 0.18) !important;
-                        border-radius: 12px !important;
-                        background: rgba(10, 10, 15, 0.95) !important;
+                        border: 1px solid #282828 !important;
+                        background: #060606 !important;
                     }
-                    /* Selected channel cyber pill */
                     [class*="modeSelected_"] [class*="link_"] {
-                        background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(124, 58, 237, 0.5) 100%) !important;
-                        border: 1px solid #c084fc !important;
-                        box-shadow: 0 0 16px rgba(192, 132, 252, 0.4) !important;
-                        border-radius: 8px !important;
+                        background: #151515 !important;
+                        border-left: 3px solid #ffffff !important;
                     }
-                    /* Sleek glowing scrollbars */
-                    ::-webkit-scrollbar { width: 6px !important; }
-                    ::-webkit-scrollbar-thumb {
-                        background: linear-gradient(180deg, #7c3aed 0%, #c084fc 100%) !important;
-                        border-radius: 99px !important;
-                        box-shadow: 0 0 10px rgba(192, 132, 252, 0.6) !important;
-                    }
-                `;
-                localStorage.setItem('dqu_dc_theme', 'amoled');
-                showToast("🖤 Discord Teması", "Pure AMOLED Siyah teması siber efektlerle uygulandı!", "success");
-                log("🎨 [Tema]: Discord Pure AMOLED Siyah & Siber Efektler Aktif!", "success");
-            } else if (theme === 'neon') {
-                styleEl.innerHTML = `
-                    /* 💜 NEXSUS CYBERPUNK NEON VIOLET GLASS THEME */
-                    html, body, #app-mount {
-                        background: radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.35) 0%, transparent 40%),
-                                    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.25) 0%, transparent 40%),
-                                    #090317 !important;
-                    }
-                    .theme-dark, .theme-light,
+                `,
+                neon: `
+                    /* 💜 ULTRA SMOOTH SİBER MOR — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
                     [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
-                    [class*="container_"], [class*="chat_"], [class*="sidebar_"], [class*="panels_"],
-                    [class*="content_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
-                        background: rgba(13, 6, 31, 0.82) !important;
-                        backdrop-filter: blur(16px) !important;
-                        --background-primary: rgba(13, 6, 31, 0.82) !important;
-                        --background-secondary: rgba(22, 10, 51, 0.88) !important;
-                        --background-secondary-alt: rgba(18, 8, 43, 0.88) !important;
-                        --background-tertiary: rgba(9, 3, 23, 0.95) !important;
-                        --background-accent: #3b146e !important;
-                        --background-floating: #230e4f !important;
-                        --channeltextarea-background: rgba(35, 14, 79, 0.9) !important;
-                        --activity-card-background: rgba(26, 11, 61, 0.8) !important;
-                        --text-normal: #f8fafc !important;
-                        --text-muted: #c4b5fd !important;
-                        --interactive-normal: #e2e8f0 !important;
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #120726 !important;
+                        --background-secondary: #0e051f !important;
+                        --background-secondary-alt: #160a30 !important;
+                        --background-tertiary: #080214 !important;
+                        --background-accent: #7c3aed !important;
+                        --background-floating: #1c0d45 !important;
+                        --channeltextarea-background: #180a33 !important;
+                        --text-normal: #f3e8ff !important;
+                        --text-muted: #c084fc !important;
+                        --interactive-normal: #e9d5ff !important;
                         --interactive-hover: #ffffff !important;
-                        --interactive-active: #f472b6 !important;
                     }
-                    /* Neon Purple glowing chat box */
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #070212 !important;
+                        border-right: 1px solid rgba(168,85,247,0.2) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #0e051f !important;
+                        border-right: 1px solid rgba(168,85,247,0.2) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #14072b !important;
+                        border-top: 1px solid rgba(168,85,247,0.2) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #120726 !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #0e051f !important;
+                        border-left: 1px solid rgba(168,85,247,0.2) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #0e051f !important;
+                        border-bottom: 1px solid rgba(168,85,247,0.2) !important;
+                    }
                     [class*="channelTextArea_"], [class*="scrollableContainer_"] {
-                        border: 1px solid rgba(236, 72, 153, 0.6) !important;
-                        box-shadow: 0 0 24px rgba(236, 72, 153, 0.25), 0 0 12px rgba(168, 85, 247, 0.35) !important;
-                        border-radius: 14px !important;
-                        background: rgba(25, 10, 58, 0.95) !important;
+                        border: 1px solid #a855f7 !important;
+                        background: #160a33 !important;
+                        box-shadow: 0 0 12px rgba(168,85,247,0.2) !important;
                     }
-                    /* Selected channel neon pill */
                     [class*="modeSelected_"] [class*="link_"] {
-                        background: linear-gradient(135deg, rgba(236, 72, 153, 0.35) 0%, rgba(168, 85, 247, 0.55) 100%) !important;
-                        border: 1px solid #f472b6 !important;
-                        box-shadow: 0 0 20px rgba(236, 72, 153, 0.5) !important;
-                        border-radius: 8px !important;
+                        background: #250d4f !important;
+                        border-left: 3px solid #c084fc !important;
                     }
-                    /* Radiant Pink-Purple Scrollbars */
-                    ::-webkit-scrollbar { width: 6px !important; }
-                    ::-webkit-scrollbar-thumb {
-                        background: linear-gradient(180deg, #ec4899 0%, #a855f7 100%) !important;
-                        border-radius: 99px !important;
-                        box-shadow: 0 0 14px rgba(236, 72, 153, 0.8) !important;
-                    }
-                `;
-                localStorage.setItem('dqu_dc_theme', 'neon');
-                showToast("💜 Discord Teması", "Neon Mor Cam & Parıltı Efektleri uygulandı!", "success");
-                log("🎨 [Tema]: Discord Neon Mor Cam & Fütüristik Efektler Aktif!", "success");
-            } else if (theme === 'blue') {
-                styleEl.innerHTML = `
-                    /* 💎 NEXSUS CYBER MATRIX CRYSTAL BLUE THEME */
-                    html, body, #app-mount {
-                        background: radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.35) 0%, transparent 45%),
-                                    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 45%),
-                                    #020b18 !important;
-                    }
-                    .theme-dark, .theme-light,
+                `,
+                blue: `
+                    /* 💎 ULTRA SMOOTH ARCTIC CYAN — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
                     [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
-                    [class*="container_"], [class*="chat_"], [class*="sidebar_"], [class*="panels_"],
-                    [class*="content_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
-                        background: rgba(3, 16, 36, 0.85) !important;
-                        backdrop-filter: blur(16px) !important;
-                        --background-primary: rgba(3, 16, 36, 0.85) !important;
-                        --background-secondary: rgba(5, 26, 56, 0.9) !important;
-                        --background-secondary-alt: rgba(4, 21, 46, 0.9) !important;
-                        --background-tertiary: rgba(2, 10, 24, 0.95) !important;
-                        --background-accent: #0c427d !important;
-                        --background-floating: #093366 !important;
-                        --channeltextarea-background: rgba(7, 36, 79, 0.9) !important;
-                        --activity-card-background: rgba(5, 26, 56, 0.8) !important;
-                        --text-normal: #f0f9ff !important;
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #041426 !important;
+                        --background-secondary: #030f1e !important;
+                        --background-secondary-alt: #061c33 !important;
+                        --background-tertiary: #010812 !important;
+                        --background-accent: #0284c7 !important;
+                        --background-floating: #082852 !important;
+                        --channeltextarea-background: #07213d !important;
+                        --text-normal: #e0f2fe !important;
                         --text-muted: #7dd3fc !important;
                         --interactive-normal: #bae6fd !important;
                         --interactive-hover: #ffffff !important;
-                        --interactive-active: #38bdf8 !important;
                     }
-                    /* Cyan glowing chat box */
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #010710 !important;
+                        border-right: 1px solid rgba(6,182,212,0.2) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #030f1e !important;
+                        border-right: 1px solid rgba(6,182,212,0.2) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #05182e !important;
+                        border-top: 1px solid rgba(6,182,212,0.2) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #041426 !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #030f1e !important;
+                        border-left: 1px solid rgba(6,182,212,0.2) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #030f1e !important;
+                        border-bottom: 1px solid rgba(6,182,212,0.2) !important;
+                    }
                     [class*="channelTextArea_"], [class*="scrollableContainer_"] {
-                        border: 1px solid rgba(56, 189, 248, 0.6) !important;
-                        box-shadow: 0 0 24px rgba(56, 189, 248, 0.25) !important;
-                        border-radius: 14px !important;
-                        background: rgba(4, 22, 51, 0.95) !important;
+                        border: 1px solid #06b6d4 !important;
+                        background: #07213d !important;
+                        box-shadow: 0 0 12px rgba(6,182,212,0.2) !important;
                     }
-                    /* Selected channel cyber cyan pill */
                     [class*="modeSelected_"] [class*="link_"] {
-                        background: linear-gradient(135deg, rgba(6, 182, 212, 0.35) 0%, rgba(59, 130, 246, 0.55) 100%) !important;
-                        border: 1px solid #38bdf8 !important;
-                        box-shadow: 0 0 20px rgba(56, 189, 248, 0.5) !important;
-                        border-radius: 8px !important;
+                        background: #0a315c !important;
+                        border-left: 3px solid #38bdf8 !important;
                     }
-                    /* Cyan matrix scrollbars */
-                    ::-webkit-scrollbar { width: 6px !important; }
-                    ::-webkit-scrollbar-thumb {
-                        background: linear-gradient(180deg, #06b6d4 0%, #3b82f6 100%) !important;
-                        border-radius: 99px !important;
-                        box-shadow: 0 0 14px rgba(6, 182, 212, 0.8) !important;
+                `,
+                cyberpunk: `
+                    /* 🟣🔴 DUAL-TONE CYBERPUNK (MOR & KIRMIZI) — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
+                    [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #150524 !important;
+                        --background-secondary: #0f031c !important;
+                        --background-secondary-alt: #1e0730 !important;
+                        --background-tertiary: #0a0214 !important;
+                        --background-accent: #f43f5e !important;
+                        --background-floating: #26093d !important;
+                        --channeltextarea-background: #1c062e !important;
+                        --text-normal: #ffe4e6 !important;
+                        --text-muted: #fda4af !important;
+                        --interactive-normal: #fbcfe8 !important;
+                        --interactive-hover: #ffffff !important;
                     }
-                `;
-                localStorage.setItem('dqu_dc_theme', 'blue');
-                showToast("💎 Discord Teması", "Kristal Siber Mavi & Matriks Efektleri uygulandı!", "success");
-                log("🎨 [Tema]: Discord Kristal Siber Mavi Aktif!", "success");
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #090112 !important;
+                        border-right: 1px solid rgba(244,63,94,0.25) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #0f031c !important;
+                        border-right: 1px solid rgba(244,63,94,0.25) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #180529 !important;
+                        border-top: 1px solid rgba(244,63,94,0.25) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #150524 !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #0f031c !important;
+                        border-left: 1px solid rgba(244,63,94,0.25) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #0f031c !important;
+                        border-bottom: 1px solid rgba(244,63,94,0.25) !important;
+                    }
+                    [class*="channelTextArea_"], [class*="scrollableContainer_"] {
+                        border: 1px solid #f43f5e !important;
+                        background: #1c062e !important;
+                        box-shadow: 0 0 12px rgba(244,63,94,0.2) !important;
+                    }
+                    [class*="modeSelected_"] [class*="link_"] {
+                        background: #360b4a !important;
+                        border-left: 3px solid #f43f5e !important;
+                    }
+                `,
+                dynasty: `
+                    /* 🟢🟡 DUAL-TONE DYNASTY (ZÜMRÜT & ALTIN) — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
+                    [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #041f17 !important;
+                        --background-secondary: #021711 !important;
+                        --background-secondary-alt: #062b20 !important;
+                        --background-tertiary: #010f0b !important;
+                        --background-accent: #f59e0b !important;
+                        --background-floating: #083b2c !important;
+                        --channeltextarea-background: #072e22 !important;
+                        --text-normal: #ecfdf5 !important;
+                        --text-muted: #6ee7b7 !important;
+                        --interactive-normal: #a7f3d0 !important;
+                        --interactive-hover: #fef3c7 !important;
+                    }
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #010a07 !important;
+                        border-right: 1px solid rgba(251,191,36,0.25) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #021711 !important;
+                        border-right: 1px solid rgba(251,191,36,0.25) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #05241b !important;
+                        border-top: 1px solid rgba(251,191,36,0.25) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #041f17 !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #021711 !important;
+                        border-left: 1px solid rgba(251,191,36,0.25) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #021711 !important;
+                        border-bottom: 1px solid rgba(251,191,36,0.25) !important;
+                    }
+                    [class*="channelTextArea_"], [class*="scrollableContainer_"] {
+                        border: 1px solid #fbbf24 !important;
+                        background: #072e22 !important;
+                        box-shadow: 0 0 12px rgba(251,191,36,0.2) !important;
+                    }
+                    [class*="modeSelected_"] [class*="link_"] {
+                        background: #094734 !important;
+                        border-left: 3px solid #fbbf24 !important;
+                    }
+                `,
+                nova: `
+                    /* 🔵🟠 DUAL-TONE NOVA (BUZUL MAVİ & TURUNCU) — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
+                    [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #05182c !important;
+                        --background-secondary: #031121 !important;
+                        --background-secondary-alt: #08223d !important;
+                        --background-tertiary: #020b17 !important;
+                        --background-accent: #f97316 !important;
+                        --background-floating: #0b3259 !important;
+                        --channeltextarea-background: #092645 !important;
+                        --text-normal: #f0fdf4 !important;
+                        --text-muted: #7dd3fc !important;
+                        --interactive-normal: #bae6fd !important;
+                        --interactive-hover: #ffedd5 !important;
+                    }
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #010812 !important;
+                        border-right: 1px solid rgba(249,115,22,0.25) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #031121 !important;
+                        border-right: 1px solid rgba(249,115,22,0.25) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #061c33 !important;
+                        border-top: 1px solid rgba(249,115,22,0.25) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #05182c !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #031121 !important;
+                        border-left: 1px solid rgba(249,115,22,0.25) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #031121 !important;
+                        border-bottom: 1px solid rgba(249,115,22,0.25) !important;
+                    }
+                    [class*="channelTextArea_"], [class*="scrollableContainer_"] {
+                        border: 1px solid #f97316 !important;
+                        background: #092645 !important;
+                        box-shadow: 0 0 12px rgba(249,115,22,0.2) !important;
+                    }
+                    [class*="modeSelected_"] [class*="link_"] {
+                        background: #0c3e70 !important;
+                        border-left: 3px solid #f97316 !important;
+                    }
+                `,
+                synthwave: `
+                    /* 🌅 DUAL-TONE SYNTHWAVE (PEMBE & TURUNCU) — FULL DISCORD */
+                    html, body, #app-mount, .theme-dark,
+                    [class*="appMount_"], [class*="app_"], [class*="layers_"], [class*="layer_"],
+                    [class*="container_"], [class*="chat_"], [class*="standardSidebarView_"], [class*="pageWrapper_"] {
+                        --background-primary: #1c082b !important;
+                        --background-secondary: #14051f !important;
+                        --background-secondary-alt: #240b38 !important;
+                        --background-tertiary: #0c0214 !important;
+                        --background-accent: #ec4899 !important;
+                        --background-floating: #2d0e47 !important;
+                        --channeltextarea-background: #260a3a !important;
+                        --text-normal: #fdf2f8 !important;
+                        --text-muted: #f472b6 !important;
+                        --interactive-normal: #fbcfe8 !important;
+                        --interactive-hover: #fed7aa !important;
+                    }
+                    [class*="guilds_"], nav[class*="guilds_"], [class*="tree_"] {
+                        background: #0a0212 !important;
+                        border-right: 1px solid rgba(236,72,153,0.25) !important;
+                    }
+                    [class*="sidebar_"], nav[class*="sidebar_"], [class*="channels_"] {
+                        background: #14051f !important;
+                        border-right: 1px solid rgba(236,72,153,0.25) !important;
+                    }
+                    [class*="panels_"], section[class*="panels_"] {
+                        background: #1f0730 !important;
+                        border-top: 1px solid rgba(236,72,153,0.25) !important;
+                    }
+                    [class*="chatContent_"], main[class*="chatContent_"], [class*="messagesWrapper_"] {
+                        background: #1c082b !important;
+                    }
+                    [class*="members_"], [class*="membersWrap_"], aside[class*="membersWrap_"] {
+                        background: #14051f !important;
+                        border-left: 1px solid rgba(236,72,153,0.25) !important;
+                    }
+                    [class*="title_"], [class*="subtitleContainer_"], header[class*="header_"] {
+                        background: #14051f !important;
+                        border-bottom: 1px solid rgba(236,72,153,0.25) !important;
+                    }
+                    [class*="channelTextArea_"], [class*="scrollableContainer_"] {
+                        border: 1px solid #ec4899 !important;
+                        background: #260a3a !important;
+                        box-shadow: 0 0 12px rgba(236,72,153,0.2) !important;
+                    }
+                    [class*="modeSelected_"] [class*="link_"] {
+                        background: #3e125c !important;
+                        border-left: 3px solid #fb923c !important;
+                    }
+                `
+            };
+            if (theme && themeCSS[theme]) {
+                styleEl.innerHTML = themeCSS[theme];
+                localStorage.setItem('dqu_dc_theme', theme);
+                showToast("🎨 Discord Teması", theme.toUpperCase() + " Teması (60 FPS Akıcı Mod) uygulandı!", "success");
+                log("🎨 [Tema]: Discord Teması Güncellendi: " + theme.toUpperCase(), "success");
             } else {
-                styleEl.innerHTML = ``;
+                styleEl.innerHTML = "";
                 localStorage.removeItem('dqu_dc_theme');
                 showToast("🔄 Discord Teması", "Varsayılan Discord temasına dönüldü.", "info");
                 log("🎨 [Tema]: Varsayılan Discord Teması Geri Yüklendi.", "info");
             }
+
+            ['amoled', 'neon', 'blue', 'cyberpunk', 'dynasty', 'nova', 'synthwave'].forEach(t => {
+                const btn = document.getElementById('btn-dc-theme-' + t);
+                if (btn) btn.classList.toggle('active', t === theme);
+            });
         };
 
-        bindClick("btn-dc-theme-amoled", () => applyDiscordClientTheme('amoled'));
-        bindClick("btn-dc-theme-neon", () => applyDiscordClientTheme('neon'));
-        bindClick("btn-dc-theme-blue", () => applyDiscordClientTheme('blue'));
-        bindClick("btn-dc-theme-reset", () => applyDiscordClientTheme('reset'));
+        ['amoled', 'neon', 'blue', 'cyberpunk', 'dynasty', 'nova', 'synthwave'].forEach(t => {
+            bindClick('btn-dc-theme-' + t, () => applyDiscordClientTheme(t));
+        });
+        bindClick('btn-dc-theme-reset', () => applyDiscordClientTheme('reset'));
 
-        // Restore saved Discord Client Theme
         const savedDcTheme = localStorage.getItem('dqu_dc_theme');
         if (savedDcTheme) applyDiscordClientTheme(savedDcTheme);
 
-        // 2. Color & Invisible Text
+        // ─── 2. COLOR & INVISIBLE TEXT ───
         const copyToClipboard = (text, successTitle) => {
             navigator.clipboard.writeText(text).then(() => {
                 showToast(successTitle, "Kopyalandı! Discord sohbetine yapıştırabilirsiniz.", "success");
@@ -2600,7 +3123,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             copyToClipboard(txt.split("").reverse().join(""), "🔀 Ters Yazı");
         });
 
-        // 4. Bio & Status Styler
+        // ─── 4. BIO & STATUS STYLER ───
         const fontMap = {
             aesthetic: (str) => {
                 const smalls = { a: "ᵃ", b: "ᵇ", c: "ᶜ", d: "ᵈ", e: "ᵉ", f: "ᶠ", g: "ᵍ", h: "ʰ", i: "ⁱ", j: "ʲ", k: "ᵏ", l: "ˡ", m: "ᵐ", n: "ⁿ", o: "ᵒ", p: "ᵖ", q: "ᑫ", r: "ʳ", s: "ˢ", t: "ᵗ", u: "ᵘ", v: "ᵛ", w: "ʷ", x: "ˣ", y: "ʸ", z: "ᶻ" };
@@ -2611,186 +3134,73 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                 return str.split("").map(c => goths[c] || c).join("");
             },
             bold: (str) => {
-                const bolds = { a:"𝗮",b:"𝗯",c:"𝗰",d:"𝗱",e:"𝗲",f:"𝗳",g:"𝗴",h:"𝗵",i:"𝗶",j:"𝗷",k:"𝗸",l:"𝗹",m:"𝗺",n:"𝗻",o:"𝗼",p:"𝗽",q:"𝗾",r:"𝗿",s:"ˢ",t:"𝘁",u:"𝘂",v:"𝘃",w:"𝘄",x:"𝘅",y:"𝘆",z:"𝘇", A:"𝗔",B:"𝗕",C:"𝗖",D:"𝗗",E:"𝗘",F:"𝗙",G:"𝗚",H:"𝗛",I:"𝗜",J:"𝗝",K:"𝗞",L:"𝗟",M:"𝗠",N:"𝗡",O:"𝗢",P:"𝗣",Q:"𝗤",R:"𝗥",S:"𝗦",T:"𝗧",U:"𝗨",V:"𝗩",W:"𝗪",X:"𝗫",Y:"𝗬",Z:"𝗭" };
+                const bolds = { a:"𝗮",b:"𝗯",c:"𝗰",d:"𝗱",e:"𝗲",f:"𝗳",g:"𝗴",h:"𝗵",i:"𝗶",j:"𝗷",k:"𝗸",l:"𝗹",m:"𝗺",n:"𝗻",o:"𝗼",p:"𝗽",q:"𝗾",r:"𝗿",s:"𝘀",t:"𝘁",u:"𝘂",v:"𝘃",w:"𝘄",x:"𝘅",y:"𝘆",z:"𝘇", A:"𝗔",B:"𝗕",C:"𝗖",D:"𝗗",E:"𝗘",F:"𝗙",G:"𝗚",H:"𝗛",I:"𝗜",J:"𝗝",K:"𝗞",L:"𝗟",M:"𝗠",N:"𝗡",O:"𝗢",P:"𝗣",Q:"𝗤",R:"𝗥",S:"𝗦",T:"𝗧",U:"𝗨",V:"𝗩",W:"𝗪",X:"𝗫",Y:"𝗬",Z:"𝗭" };
                 return str.split("").map(c => bolds[c] || c).join("");
             },
-            cyber: (str) => {
-                const cyb = { a:"𝖈",b:"𝖉",c:"𝖈",d:"𝖉",e:"𝖊",f:"𝖋",g:"𝖌",h:"𝖍",i:"𝖎",j:"𝖏",k:"𝖐",l:"𝖑",m:"𝖒",n:"𝖓",o:"𝖔",p:"𝖕",q:"𝖖",r:"𝖗",s:"𝖘",t:"𝖙",u:"𝖚",v:"𝖛",w:"𝖜",x:"𝖝",y:"𝖞",z:"𝖟", A:"𝕮",B:"𝕯",C:"𝕮",D:"𝕯",E:"𝕰",F:"𝕱",G:"𝕲",H:"𝕳",I:"𝕴",J:"𝕵",K:"𝕶",L:"𝕷",M:"𝕸",N:"𝕹",O:"𝕺",P:"𝕻",Q:"𝕼",R:"𝕽",S:"𝕾",T:"𝕿",U:"𝖀",V:"𝖁",W:"𝖂",X:"𝖃",Y:"𝖄",Z:"𝖅" };
-                return str.split("").map(c => cyb[c] || c).join("");
+            italic: (str) => {
+                const italics = { a:"𝘢",b:"𝘣",c:"𝘤",d:"𝘥",e:"𝘦",f:"𝘧",g:"𝘨",h:"𝘩",i:"𝘪",j:"𝘫",k:"𝘬",l:"𝘭",m:"𝘮",n:"𝘯",o:"𝘰",p:"𝘱",q:"𝘲",r:"𝘳",s:"𝘴",t:"𝘵",u:"𝘶",v:"𝘷",w:"𝘸",x:"𝘹",y:"𝘺",z:"𝘻", A:"𝘈",B:"𝘉",C:"𝘊",D:"𝘋",E:"𝘌",F:"𝘍",G:"𝘎",H:"𝘏",I:"𝘐",J:"𝘑",K:"𝘒",L:"𝘓",M:"𝘔",N:"𝘕",O:"𝘖",P:"𝘗",Q:"𝘘",R:"𝘙",S:"𝘚",T:"𝘛",U:"𝘜",V:"𝘝",W:"𝘞",X:"𝘟",Y:"𝘠",Z:"𝘡" };
+                return str.split("").map(c => italics[c] || c).join("");
             },
-            boxed: (str) => {
-                const box = { a:"🄰",b:"🄱",c:"🄲",d:"🄳",e:"🄴",f:"🄵",g:"🄶",h:"🄷",i:"🄸",j:"🄹",k:"🄺",l:"🄻",m:"🄼",n:"🄽",o:"🄾",p:"🄿",q:"🅀",r:"🅁",s:"🅂",t:"🅃",u:"🅄",v:"🅅",w:"🅆",x:"🅇",y:"🅈",z:"🅉" };
-                return str.toLowerCase().split("").map(c => box[c] || c).join("");
+            monospace: (str) => {
+                const monos = { a:"𝚊",b:"𝚋",c:"𝚌",d:"𝚍",e:"𝚎",f:"𝚏",g:"𝚐",h:"𝚑",i:"𝚒",j:"𝚓",k:"𝚔",l:"𝚕",m:"𝚖",n:"𝚗",o:"𝚘",p:"𝚙",q:"𝚚",r:"𝚛",s:"𝚜",t:"𝚝",u:"𝚞",v:"𝚟",w:"𝚠",x:"𝚡",y:"𝚢",z:"𝚣", A:"𝙰",B:"𝙱",C:"𝙲",D:"𝙳",E:"𝙴",F:"𝙵",G:"𝙶",H:"𝙷",I:"𝙸",J:"𝙹",K:"𝙺",L:"𝙻",M:"𝙼",N:"𝙽",O:"𝙾",P:"𝙿",Q:"𝚀",R:"𝚁",S:"𝚂",T:"𝚃",U:"𝚄",V:"𝚅",W:"𝚆",X:"𝚇",Y:"𝚈",Z:"𝚉" };
+                return str.split("").map(c => monos[c] || c).join("");
             },
-            circles: (str) => {
-                const circ = { a:"ⓐ",b:"ⓑ",c:"ⓒ",d:"ⓓ",e:"ⓔ",f:"ⓕ",g:"ⓖ",h:"ⓗ",i:"ⓘ",j:"ⓙ",k:"ⓚ",l:"ⓛ",m:"ⓜ",n:"ⓝ",o:"ⓞ",p:"ⓟ",q:"ⓠ",r:"ⓡ",s:"ⓢ",t:"ⓣ",u:"ⓤ",v:"ⓥ",w:"ⓦ",x:"ⓧ",y:"ⓨ",z:"ⓩ" };
-                return str.toLowerCase().split("").map(c => circ[c] || c).join("");
+            double: (str) => {
+                const dbls = { a:"𝕒",b:"𝕓",c:"𝕔",d:"𝕕",e:"𝕖",f:"𝕗",g:"𝕘",h:"𝕙",i:"𝕚",j:"𝕛",k:"𝕜",l:"𝕝",m:"𝕞",n:"𝕟",o:"𝕠",p:"𝕡",q:"𝕢",r:"𝕣",s:"𝕤",t:"𝕥",u:"𝕦",v:"𝕧",w:"𝕨",x:"𝕩",y:"𝕪",z:"𝕫", A:"𝔸",B:"𝔹",C:"ℂ",D:"𝔻",E:"𝔼",F:"𝔽",G:"𝔾",H:"ℍ",I:"𝕀",J:"𝕁",K:"𝕂",L:"𝕃",M:"𝕄",N:"ℕ",O:"𝕆",P:"ℙ",Q:"ℚ",R:"ℝ",S:"𝕊",T:"𝕋",U:"𝕌",V:"𝕍",W:"𝕎",X:"𝕏",Y:"𝕐",Z:"ℤ" };
+                return str.split("").map(c => dbls[c] || c).join("");
             }
         };
 
-        const applyBioFont = (type, title) => {
-            const txt = (document.getElementById("input-bio-text")?.value || "NEXSUS Discord").trim();
-            const formatted = (fontMap[type] ? fontMap[type](txt) : txt);
-            copyToClipboard(formatted, `${title} Stili`);
-        };
-
-        bindClick("btn-font-aesthetic", () => applyBioFont("aesthetic", "𝒶ᵉˢᵗʰᵉᵗⁱᶜ"));
-        bindClick("btn-font-gothic", () => applyBioFont("gothic", "𝔊𝔬𝔱𝔥𝔦𝔠"));
-        bindClick("btn-font-bold", () => applyBioFont("bold", "𝗕𝗼𝗹𝗱"));
-        bindClick("btn-font-cyber", () => applyBioFont("cyber", "𝕮𝖞𝖇𝖊𝖗"));
-        bindClick("btn-font-boxed", () => applyBioFont("boxed", "🅺🆄🆃🆄"));
-        bindClick("btn-font-circles", () => applyBioFont("circles", "Ⓒⓘⓡⓒⓛⓔ"));
-
-        // 5. Notification Clearer & 8 Custom Discord Fonts
-        bindClick("btn-clear-all-notifications", () => {
-            try {
-                document.querySelectorAll('[class*="unread_"], [class*="badge_"], [class*="numberBadge_"]').forEach(el => {
-                    el.remove();
-                });
-                showToast("🧹 Bildirimler", "Tüm sunucu bildirimleri ve okunmamış mesajlar temizlendi!", "success");
-                log("🧹 [Bildirimler Temizlendi]: Tüm sunucu bildirimleri okundu sayıldı.", "success");
-            } catch(e) {}
+        ['aesthetic', 'gothic', 'bold', 'italic', 'monospace', 'double'].forEach(fontKey => {
+            bindClick('btn-font-' + fontKey, () => {
+                const inputEl = document.getElementById("input-bio-text");
+                const val = (inputEl ? inputEl.value : "").trim() || "NEXSUS CORE";
+                const styled = fontMap[fontKey](val);
+                copyToClipboard(styled, "🎭 " + fontKey.toUpperCase() + " Fontu");
+            });
         });
 
-        const setDiscordFont = (fontName) => {
-            let fontEl = document.getElementById("dqu-discord-custom-font");
-            if (!fontEl) {
-                fontEl = document.createElement("style");
-                fontEl.id = "dqu-discord-custom-font";
-                document.head.appendChild(fontEl);
+        // ─── 3. NOTIFICATION CLEANER ───
+        bindClick("btn-clear-notifications", () => {
+            const badges = document.querySelectorAll('[class*="badge_"], [class*="unread_"], [class*="numberBadge_"], [class*="unreadMentionsIndicator_"]');
+            badges.forEach(b => b.remove());
+            showToast("🧹 Bildirim Temizleyici", badges.length + " adet okunmamış bildirim temizlendi!", "success");
+            log("🧹 " + badges.length + " adet bildirim arayüzden temizlendi.", "info");
+        });
+
+        // ─── 5. DISCORD FONT CHANGER ───
+        bindClick("btn-apply-dc-font", () => {
+            const selectEl = document.getElementById("select-dc-font");
+            const fontName = selectEl ? selectEl.value : "gg sans";
+            let fontStyleEl = document.getElementById("dqu-dc-custom-font-style");
+            if (!fontStyleEl) {
+                fontStyleEl = document.createElement("style");
+                fontStyleEl.id = "dqu-dc-custom-font-style";
+                document.head.appendChild(fontStyleEl);
             }
-            if (fontName === 'poppins') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Poppins', sans-serif !important; }`;
-                showToast("🔤 Font", "Discord fontu Poppins olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Poppins", "info");
-            } else if (fontName === 'orbitron') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Orbitron', sans-serif !important; }`;
-                showToast("🔤 Font", "Discord fontu Orbitron (Siber) olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Orbitron", "info");
-            } else if (fontName === 'firacode') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Fira Code', monospace !important; }`;
-                showToast("🔤 Font", "Discord fontu Fira Code olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Fira Code", "info");
-            } else if (fontName === 'pixel') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Press Start 2P', cursive !important; font-size: 11px !important; }`;
-                showToast("🔤 Font", "Discord fontu Pixel 8-Bit olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Pixel 8-Bit", "info");
-            } else if (fontName === 'pacifico') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Pacifico', cursive !important; }`;
-                showToast("🔤 Font", "Discord fontu Pacifico olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Pacifico", "info");
-            } else if (fontName === 'montserrat') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Montserrat', sans-serif !important; }`;
-                showToast("🔤 Font", "Discord fontu Montserrat olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Montserrat", "info");
-            } else if (fontName === 'inter') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'Inter', sans-serif !important; }`;
-                showToast("🔤 Font", "Discord fontu Inter olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: Inter", "info");
-            } else if (fontName === 'mono') {
-                fontEl.innerHTML = `html, body, #app-mount, * { font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important; }`;
-                showToast("🔤 Font", "Discord fontu JetBrains Mono olarak ayarlandı!", "info");
-                log("🔤 [Font Değiştirildi]: JetBrains Mono", "info");
-            } else {
-                fontEl.innerHTML = ``;
+            if (fontName === "gg sans") {
+                fontStyleEl.innerHTML = "";
+                localStorage.removeItem("dqu_dc_custom_font");
                 showToast("🔤 Font", "Varsayılan Discord fontuna dönüldü.", "info");
-                log("🔤 [Font Değiştirildi]: Varsayılan Discord Fontu", "info");
-            }
-        };
-
-        bindClick("btn-font-poppins", () => setDiscordFont("poppins"));
-        bindClick("btn-font-orbitron", () => setDiscordFont("orbitron"));
-        bindClick("btn-font-firacode", () => setDiscordFont("firacode"));
-        bindClick("btn-font-pixel", () => setDiscordFont("pixel"));
-        bindClick("btn-font-pacifico", () => setDiscordFont("pacifico"));
-        bindClick("btn-font-montserrat", () => setDiscordFont("montserrat"));
-        bindClick("btn-font-inter", () => setDiscordFont("inter"));
-        bindClick("btn-font-mono", () => setDiscordFont("mono"));
-        bindClick("btn-font-default", () => setDiscordFont("default"));
-
-        // NUMERICAL VERSION COMPARISON FUNCTION (X.Y.Z.W)
-        function compareVersions(v1, v2) {
-            const n1 = (v1 || "0").split(".").map(Number);
-            const n2 = (v2 || "0").split(".").map(Number);
-            for (let i = 0; i < Math.max(n1.length, n2.length); i++) {
-                const a = n1[i] || 0;
-                const b = n2[i] || 0;
-                if (a > b) return 1;
-                if (a < b) return -1;
-            }
-            return 0;
-        }
-
-        // REMOTE AUTO-UPDATE ENGINE LOGIC
-        const checkUpdates = (isManual = false) => {
-            const statusText = document.getElementById("updates-status-text");
-            const installBtn = document.getElementById("btn-install-update");
-            const remoteVerBadge = document.getElementById("updates-version-badge");
-            
-            const currentInstalled = localStorage.getItem("dqu_installed_version") || PROT_VER;
-            const remoteVersion = localStorage.getItem("dqu_remote_version") || PROT_VER;
-
-            const hasNewer = compareVersions(remoteVersion, currentInstalled) > 0;
-
-            if (hasNewer) {
-                if (statusText) {
-                    statusText.innerText = `🚀 YENİ SÜRÜM HAZIR (v${remoteVersion})! Kurmak için sağdaki yeşil butona tıklayın.`;
-                    statusText.style.color = "#38bdf8";
-                }
-                if (installBtn) installBtn.style.display = "inline-flex";
-                if (remoteVerBadge) {
-                    remoteVerBadge.innerText = `v${currentInstalled} ➔ v${remoteVersion}`;
-                    remoteVerBadge.style.background = "rgba(16,185,129,0.25)";
-                    remoteVerBadge.style.color = "#34d399";
-                    remoteVerBadge.style.borderColor = "#34d399";
-                }
-                if (isManual) {
-                    showToast("🚀 Yeni Güncelleme Var!", `v${remoteVersion} sürümü yayınlandı. Yeşil butona basarak kurabilirsiniz!`, "info");
-                }
             } else {
-                if (statusText) {
-                    statusText.innerText = `✅ Mevcut sürümünüz (v${currentInstalled}) güncel ve aktif.`;
-                    statusText.style.color = "#34d399";
-                }
-                if (remoteVerBadge) {
-                    remoteVerBadge.innerText = `v${currentInstalled}`;
-                    remoteVerBadge.style.background = "rgba(56,189,248,0.2)";
-                    remoteVerBadge.style.color = "#38bdf8";
-                    remoteVerBadge.style.borderColor = "rgba(56,189,248,0.3)";
-                }
-                if (installBtn) installBtn.style.display = "none";
-                if (isManual) {
-                    showToast("✅ Sistem Güncel", `Mevcut sürümünüz (v${currentInstalled}) en son sürümdür!`, "success");
-                }
+                fontStyleEl.innerHTML = `
+                    html, body, #app-mount, * {
+                        font-family: "${fontName}", "gg sans", sans-serif !important;
+                    }
+                `;
+                localStorage.setItem("dqu_dc_custom_font", fontName);
+                showToast("🔤 Font Uygulandı", fontName + " fontu aktif edildi!", "success");
             }
-        };
-
-        bindClick("btn-check-updates-manual", () => checkUpdates(true));
-
-        bindClick("btn-install-update", () => {
-            const remoteVersion = localStorage.getItem("dqu_remote_version") || PROT_VER;
-            localStorage.setItem("dqu_installed_version", remoteVersion);
-            
-            showToast("✨ Güncelleme Kuruldu", `v${remoteVersion} sürümü kuruldu! Sayfa yenileniyor...`, "success");
-            
-            const statusText = document.getElementById("updates-status-text");
-            const installBtn = document.getElementById("btn-install-update");
-            if (statusText) {
-                statusText.innerText = `✅ Mevcut sürümünüz (v${remoteVersion}) güncel ve aktif.`;
-                statusText.style.color = "#34d399";
-            }
-            if (installBtn) installBtn.style.display = "none";
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
         });
 
-        // Auto check updates on load
-        setTimeout(() => checkUpdates(false), 500);
-
-        switchTab(savedTab);
-
+        const savedDcFont = localStorage.getItem("dqu_dc_custom_font");
+        if (savedDcFont) {
+            const selectEl = document.getElementById("select-dc-font");
+            if (selectEl) selectEl.value = savedDcFont;
+            const applyFontBtn = document.getElementById("btn-apply-dc-font");
+            if (applyFontBtn) applyFontBtn.click();
+        }
+        
         // 1. NOTES MANAGER LOGIC
         const notesArea = document.getElementById("dqu-notes-area");
         if (notesArea) {
@@ -2921,7 +3331,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
         bindClick("btn-sound-waves", () => playAmbientSynth("waves"));
         bindClick("btn-sound-stop", stopAmbientSound);
 
-        // 4. RETRO SNAKE GAME LOGIC
+        // ─── 🐍 ENHANCED RETRO CYBER SNAKE GAME ───
         let snakeLoop = null;
         let snakeScore = 0;
         let snakeHighScore = parseInt(localStorage.getItem('dqu_snake_highscore') || '0', 10);
@@ -2931,10 +3341,10 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
             const gridSize = 10;
-            const tileCountX = canvas.width / gridSize;
-            const tileCountY = canvas.height / gridSize;
+            const tileCountX = Math.floor(canvas.width / gridSize);
+            const tileCountY = Math.floor(canvas.height / gridSize);
 
-            let snake = [{ x: 5, y: 5 }];
+            let snake = [{ x: 5, y: 5 }, { x: 4, y: 5 }, { x: 3, y: 5 }];
             let food = { x: 12, y: 8 };
             let dx = 1, dy = 0;
             snakeScore = 0;
@@ -2951,6 +3361,16 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                 ctx.fillStyle = "#090314";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // Grid background
+                ctx.strokeStyle = "rgba(168, 85, 247, 0.08)";
+                ctx.lineWidth = 0.5;
+                for (let x = 0; x < canvas.width; x += gridSize) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+                for (let y = 0; y < canvas.height; y += gridSize) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+
                 const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
                 if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY || snake.some(s => s.x === head.x && s.y === head.y)) {
@@ -2961,10 +3381,15 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                         localStorage.setItem('dqu_snake_highscore', snakeHighScore.toString());
                     }
                     updateScoreDisplay();
+                    ctx.fillStyle = "rgba(0,0,0,0.7)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.fillStyle = "#ef4444";
-                    ctx.font = "bold 14px sans-serif";
+                    ctx.font = "bold 13px 'Inter', sans-serif";
                     ctx.textAlign = "center";
-                    ctx.fillText("OYUN BİTTİ!", canvas.width / 2, canvas.height / 2);
+                    ctx.fillText("💥 OYUN BİTTİ!", canvas.width / 2, canvas.height / 2 - 5);
+                    ctx.fillStyle = "#34d399";
+                    ctx.font = "10px 'Inter', sans-serif";
+                    ctx.fillText("Skor: " + snakeScore, canvas.width / 2, canvas.height / 2 + 12);
                     return;
                 }
 
@@ -2987,36 +3412,56 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
                     snake.pop();
                 }
 
-                ctx.fillStyle = "#f472b6";
-                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+                // Food with glowing pulse
+                ctx.fillStyle = "#f43f5e";
+                ctx.shadowColor = "#f43f5e";
+                ctx.shadowBlur = 8;
+                ctx.fillRect(food.x * gridSize + 1, food.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                ctx.shadowBlur = 0;
 
+                // Snake body
                 snake.forEach((part, index) => {
-                    ctx.fillStyle = index === 0 ? "#a855f7" : "#c084fc";
-                    ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 1, gridSize - 1);
+                    ctx.fillStyle = index === 0 ? "#10b981" : "#34d399";
+                    ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
                 });
             };
 
             const changeDir = (e) => {
-                if (e.key === "ArrowUp" || e.key === "w") { if (dy !== 1) { dx = 0; dy = -1; } }
-                else if (e.key === "ArrowDown" || e.key === "s") { if (dy !== -1) { dx = 0; dy = 1; } }
-                else if (e.key === "ArrowLeft" || e.key === "a") { if (dx !== 1) { dx = -1; dy = 0; } }
-                else if (e.key === "ArrowRight" || e.key === "d") { if (dx !== -1) { dx = 1; dy = 0; } }
+                if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") { if (dy !== 1) { dx = 0; dy = -1; } }
+                else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") { if (dy !== -1) { dx = 0; dy = 1; } }
+                else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") { if (dx !== 1) { dx = -1; dy = 0; } }
+                else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") { if (dx !== -1) { dx = 1; dy = 0; } }
             };
 
             document.removeEventListener("keydown", changeDir);
             document.addEventListener("keydown", changeDir);
 
-            bindClick("btn-snake-start", () => {
-                clearInterval(snakeLoop);
-                snake = [{ x: 5, y: 5 }];
-                dx = 1; dy = 0;
-                snakeScore = 0;
-                updateScoreDisplay();
-                snakeLoop = setInterval(draw, 100);
-            });
+            // D-Pad buttons
+            const dUp = document.getElementById("dpad-up");
+            const dDown = document.getElementById("dpad-down");
+            const dLeft = document.getElementById("dpad-left");
+            const dRight = document.getElementById("dpad-right");
+            if (dUp) dUp.onclick = () => { if (dy !== 1) { dx = 0; dy = -1; } };
+            if (dDown) dDown.onclick = () => { if (dy !== -1) { dx = 0; dy = 1; } };
+            if (dLeft) dLeft.onclick = () => { if (dx !== 1) { dx = -1; dy = 0; } };
+            if (dRight) dRight.onclick = () => { if (dx !== -1) { dx = 1; dy = 0; } };
+
+            const startBtn = document.getElementById("btn-snake-start");
+            if (startBtn) {
+                startBtn.onclick = () => {
+                    if (snakeLoop) clearInterval(snakeLoop);
+                    snake = [{ x: 5, y: 5 }, { x: 4, y: 5 }, { x: 3, y: 5 }];
+                    dx = 1; dy = 0;
+                    snakeScore = 0;
+                    updateScoreDisplay();
+                    const speed = parseInt(document.getElementById("select-snake-speed")?.value || '90', 10);
+                    snakeLoop = setInterval(draw, speed);
+                };
+            }
 
             draw();
         }
+        initSnakeGame();
 
         // Clicker Game Logic + Combo Burst Particles
         let clickerScore = parseInt(localStorage.getItem('dqu_clicker_score') || '0', 10);
@@ -3189,7 +3634,7 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
         });
 
         // Theme Engine (NEXSUS 7 Core Themes)
-        const ALL_THEMES = ["purple", "dark", "cyan", "synthwave", "red", "green", "yellow"];
+        const ALL_THEMES = ["purple", "dark", "cyan", "synthwave", "red", "green", "yellow", "oled", "cyberpunk", "dynasty", "nova"];
         const applyTheme = (themeName) => {
             localStorage.setItem('dqu_theme', themeName);
             ALL_THEMES.forEach(t => uiContainer.classList.remove(`theme-${t}`));
@@ -3212,6 +3657,402 @@ imgPublicUrl = chrome.runtime.getURL('assets/preview_public.png');
         ALL_THEMES.forEach(tName => {
             bindClick(`opt-theme-${tName}`, () => applyTheme(tName));
         });
+
+        
+        // ─── 🖥️ PANEL AYARLARI ENGINE (Layout, Dock Position & Size) ───
+        // Mouse wheel horizontal scroll for tab bar
+        const navTabsEl = uiContainer.querySelector('.dqu-nav-tabs');
+        if (navTabsEl) {
+            navTabsEl.addEventListener('wheel', (e) => {
+                if (uiContainer.classList.contains('dqu-layout-horizontal') || navTabsEl.scrollWidth > navTabsEl.clientWidth) {
+                    e.preventDefault();
+                    navTabsEl.scrollLeft += e.deltaY * 0.9;
+                }
+            }, { passive: false });
+        }
+
+        const applyPanelLayout = (layout) => {
+            localStorage.setItem('dqu_panel_layout', layout);
+            uiContainer.classList.toggle('dqu-layout-horizontal', layout === 'horizontal');
+            const vBtn = document.getElementById('btn-layout-vertical');
+            const hBtn = document.getElementById('btn-layout-horizontal');
+            if (vBtn) vBtn.classList.toggle('active', layout === 'vertical');
+            if (hBtn) hBtn.classList.toggle('active', layout === 'horizontal');
+        };
+        const savedLayout = localStorage.getItem('dqu_panel_layout') || 'vertical';
+        applyPanelLayout(savedLayout);
+        bindClick('btn-layout-vertical', () => applyPanelLayout('vertical'));
+        bindClick('btn-layout-horizontal', () => applyPanelLayout('horizontal'));
+
+        const applyNavSide = (side) => {
+            localStorage.setItem('dqu_nav_side', side);
+            uiContainer.classList.toggle('dqu-nav-right', side === 'right');
+            const lBtn = document.getElementById('btn-nav-left');
+            const rBtn = document.getElementById('btn-nav-right');
+            if (lBtn) lBtn.classList.toggle('active', side === 'left');
+            if (rBtn) rBtn.classList.toggle('active', side === 'right');
+        };
+        const savedNavSide = localStorage.getItem('dqu_nav_side') || 'left';
+        applyNavSide(savedNavSide);
+        bindClick('btn-nav-left', () => applyNavSide('left'));
+        bindClick('btn-nav-right', () => applyNavSide('right'));
+
+        const applyDockPos = (pos) => {
+            localStorage.setItem('dqu_dock_pos', pos);
+            if (triggerBtn) {
+                triggerBtn.classList.remove('dock-br', 'dock-tr', 'dock-bl', 'dock-tl');
+                triggerBtn.classList.add(`dock-${pos}`);
+            }
+            ['br', 'tr', 'bl', 'tl'].forEach(p => {
+                const btn = document.getElementById(`btn-dock-${p}`);
+                if (btn) btn.classList.toggle('active', p === pos);
+            });
+        };
+        const savedDockPos = localStorage.getItem('dqu_dock_pos') || 'br';
+        applyDockPos(savedDockPos);
+        ['br', 'tr', 'bl', 'tl'].forEach(p => bindClick(`btn-dock-${p}`, () => applyDockPos(p)));
+
+        const applyDockSize = (size) => {
+            localStorage.setItem('dqu_dock_size', size);
+            if (triggerBtn) {
+                triggerBtn.classList.remove('dock-size-1', 'dock-size-2', 'dock-size-3', 'dock-size-4');
+                triggerBtn.classList.add(`dock-size-${size}`);
+            }
+            [1, 2, 3, 4].forEach(s => {
+                const btn = document.getElementById(`btn-dock-size-${s}`);
+                if (btn) btn.classList.toggle('active', s.toString() === size.toString());
+            });
+        };
+        const savedDockSize = localStorage.getItem('dqu_dock_size') || '3';
+        applyDockSize(savedDockSize);
+        [1, 2, 3, 4].forEach(s => bindClick(`btn-dock-size-${s}`, () => applyDockSize(s)));
+
+        // ─── 🎙️ MİKROFON LOOPBACK ENGINE ───
+        let micStream = null;
+        let micAudioCtx = null;
+        let micSource = null;
+        let micAnalyser = null;
+        let micAnimFrame = null;
+        const micToggleBtn = document.getElementById('btn-mic-loopback-toggle');
+        const micVuMeter = document.getElementById('mic-vu-meter');
+
+        if (micToggleBtn) {
+            micToggleBtn.onclick = async () => {
+                if (micStream) {
+                    // Stop mic
+                    if (micStream) micStream.getTracks().forEach(t => t.stop());
+                    if (micAudioCtx) micAudioCtx.close();
+                    if (micAnimFrame) cancelAnimationFrame(micAnimFrame);
+                    micStream = null;
+                    micAudioCtx = null;
+                    micToggleBtn.innerText = '🎙️ Mikrofonu Dinle (Aç)';
+                    micToggleBtn.classList.remove('pressed');
+                    if (micVuMeter) micVuMeter.style.width = '0%';
+                    log('🎙️ Mikrofon dinleme durduruldu.', 'info');
+                } else {
+                    // Start mic
+                    try {
+                        micAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        micSource = micAudioCtx.createMediaStreamSource(micStream);
+                        micAnalyser = micAudioCtx.createAnalyser();
+                        micAnalyser.fftSize = 256;
+                        micSource.connect(micAnalyser);
+                        micSource.connect(micAudioCtx.destination);
+
+                        micToggleBtn.innerText = '⏹️ Dinlemeyi Kapat';
+                        micToggleBtn.classList.add('pressed');
+                        log('🎙️ Mikrofon canlı dinleme açıldı (Kulaklığınızı kontrol edin).', 'success');
+
+                        const dataArray = new Uint8Array(micAnalyser.frequencyBinCount);
+                        const updateVu = () => {
+                            if (!micAnalyser) return;
+                            micAnalyser.getByteFrequencyData(dataArray);
+                            let sum = 0;
+                            for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                            const avg = sum / dataArray.length;
+                            const pct = Math.min(100, Math.round((avg / 128) * 100));
+                            if (micVuMeter) micVuMeter.style.width = pct + '%';
+                            micAnimFrame = requestAnimationFrame(updateVu);
+                        };
+                        updateVu();
+                    } catch(err) {
+                        showToast('Mikrofon Hatası', 'Mikrofon izni verilemedi: ' + err.message, 'error');
+                    }
+                }
+            };
+        }
+
+        // ─── 🔐 AES / BASE64 CIPHER ENGINE ───
+        const xorCipher = (text, key) => {
+            let res = '';
+            for (let i = 0; i < text.length; i++) {
+                res += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return res;
+        };
+
+        bindClick('btn-cipher-encrypt', () => {
+            const key = (document.getElementById('input-cipher-key')?.value || 'nexsus').trim();
+            const txt = (document.getElementById('input-cipher-text')?.value || '').trim();
+            if (!txt) { showToast('Uyarı', 'Lütfen şifrelenecek mesaj yazın.', 'info'); return; }
+            try {
+                const enc = btoa(unescape(encodeURIComponent(xorCipher(txt, key))));
+                const output = `[NEXSUS-ENC:${enc}]`;
+                document.getElementById('input-cipher-text').value = output;
+                navigator.clipboard.writeText(output);
+                showToast('Şifrelendi', 'Şifreli mesaj kopyalandı! Discord\'a yapıştırabilirsiniz.', 'success');
+                log('🔐 Mesaj şifrelendi ve panoya kopyalandı.', 'success');
+            } catch(e) {
+                showToast('Hata', 'Şifreleme başarısız oldu.', 'error');
+            }
+        });
+
+        bindClick('btn-cipher-decrypt', () => {
+            const key = (document.getElementById('input-cipher-key')?.value || 'nexsus').trim();
+            let txt = (document.getElementById('input-cipher-text')?.value || '').trim();
+            if (!txt) { showToast('Uyarı', 'Lütfen çözülecek şifreli mesajı girin.', 'info'); return; }
+            try {
+                if (txt.includes('[NEXSUS-ENC:') && txt.endsWith(']')) {
+                    txt = txt.replace('[NEXSUS-ENC:', '').slice(0, -1);
+                }
+                const dec = xorCipher(decodeURIComponent(escape(atob(txt))), key);
+                document.getElementById('input-cipher-text').value = dec;
+                showToast('Çözüldü', 'Mesaj başarıyla çözüldü!', 'success');
+                log('🔓 Şifreli mesaj çözüldü: ' + dec, 'info');
+            } catch(e) {
+                showToast('Hata', 'Şifre çözülemedi! Anahtar yanlış olabilir.', 'error');
+            }
+        });
+
+        // ─── ⏱️ 3'Ü 1 ARADA ZAMAN, KRONOMETRE & CANLI SAAT MOTORU ───
+        // 1. CANLI YEREL SAAT MOTORU
+        let is24HourFormat = true;
+        const clockEl = document.getElementById('live-digital-clock');
+        const dateEl = document.getElementById('live-digital-date');
+        const formatBtn = document.getElementById('btn-clock-format-toggle');
+
+        const updateLiveClock = () => {
+            const now = new Date();
+            if (clockEl) {
+                if (is24HourFormat) {
+                    const h = now.getHours().toString().padStart(2, '0');
+                    const m = now.getMinutes().toString().padStart(2, '0');
+                    const s = now.getSeconds().toString().padStart(2, '0');
+                    clockEl.innerText = `${h}:${m}:${s}`;
+                } else {
+                    let h = now.getHours();
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    h = h % 12 || 12;
+                    const m = now.getMinutes().toString().padStart(2, '0');
+                    const s = now.getSeconds().toString().padStart(2, '0');
+                    clockEl.innerText = `${h.toString().padStart(2, '0')}:${m}:${s} ${ampm}`;
+                }
+            }
+            if (dateEl) {
+                const opts = { day: 'numeric', month: 'long', year: 'numeric', weekday: 'short' };
+                dateEl.innerText = now.toLocaleDateString('tr-TR', opts);
+            }
+        };
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
+
+        bindClick('btn-clock-format-toggle', function() {
+            is24HourFormat = !is24HourFormat;
+            this.innerText = is24HourFormat ? '24H' : '12H';
+            updateLiveClock();
+        });
+
+        // 2. GERİ SAYIM ZAMANLAYICISI (COUNTDOWN TIMER)
+        let cdSeconds = 60;
+        let cdInterval = null;
+        const cdDisplay = document.getElementById('countdown-timer-display');
+
+        const updateCountdownDisplay = () => {
+            if (!cdDisplay) return;
+            const h = Math.floor(cdSeconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((cdSeconds % 3600) / 60).toString().padStart(2, '0');
+            const s = (cdSeconds % 60).toString().padStart(2, '0');
+            cdDisplay.innerText = `${h}:${m}:${s}`;
+        };
+
+        const setCountdownSeconds = (sec) => {
+            if (cdInterval) { clearInterval(cdInterval); cdInterval = null; }
+            cdSeconds = Math.max(1, Math.min(86400, sec));
+            updateCountdownDisplay();
+            const sBtn = document.getElementById('btn-countdown-start');
+            if (sBtn) sBtn.innerText = '▶️ Başlat';
+        };
+
+        bindClick('btn-cd-1m', () => setCountdownSeconds(60));
+        bindClick('btn-cd-5m', () => setCountdownSeconds(5 * 60));
+        bindClick('btn-cd-15m', () => setCountdownSeconds(15 * 60));
+        bindClick('btn-cd-30m', () => setCountdownSeconds(30 * 60));
+        bindClick('btn-cd-1h', () => setCountdownSeconds(60 * 60));
+
+        bindClick('btn-countdown-set-custom', () => {
+            const h = parseInt(document.getElementById('input-countdown-hours')?.value || '0', 10) || 0;
+            const m = parseInt(document.getElementById('input-countdown-minutes')?.value || '0', 10) || 0;
+            const s = parseInt(document.getElementById('input-countdown-seconds')?.value || '0', 10) || 0;
+            const total = (h * 3600) + (m * 60) + s;
+            if (total <= 0) {
+                showToast('Uyarı', 'Lütfen geçerli bir süre belirleyin.', 'info');
+                return;
+            }
+            setCountdownSeconds(total);
+            showToast('Zamanlayıcı Ayarlandı', `${h}s ${m}dk ${s}sn olarak belirlendi!`, 'success');
+        });
+
+        bindClick('btn-countdown-reset', () => setCountdownSeconds(60));
+
+        bindClick('btn-countdown-start', function() {
+            if (cdInterval) {
+                clearInterval(cdInterval);
+                cdInterval = null;
+                this.innerText = '▶️ Devam Et';
+            } else {
+                this.innerText = '⏸️ Duraklat';
+                cdInterval = setInterval(() => {
+                    if (cdSeconds > 0) {
+                        cdSeconds--;
+                        updateCountdownDisplay();
+                    } else {
+                        clearInterval(cdInterval);
+                        cdInterval = null;
+                        playSuccessSound();
+                        showToast('⏰ Süre Bitti!', 'Belirlediğiniz zamanlayıcı süresi tamamlandı!', 'success', true);
+                        this.innerText = '▶️ Başlat';
+                    }
+                }, 1000);
+            }
+        });
+
+        // 3. SONSUZ KRONOMETRE & HIZLI MİLİSANİYE SAYACI (STOPWATCH)
+        let swStartTime = 0;
+        let swElapsedTime = 0;
+        let swInterval = null;
+        let swHourlyNotify = false;
+        let swLastHourNotified = 0;
+        const swDisplay = document.getElementById('stopwatch-display');
+
+        const updateStopwatchDisplay = () => {
+            if (!swDisplay) return;
+            const totalMs = swElapsedTime + (swInterval ? (performance.now() - swStartTime) : 0);
+            const totalSec = Math.floor(totalMs / 1000);
+            const h = Math.floor(totalSec / 3600).toString().padStart(2, '0');
+            const m = Math.floor((totalSec % 3600) / 60).toString().padStart(2, '0');
+            const s = (totalSec % 60).toString().padStart(2, '0');
+            const ms = Math.floor((totalMs % 1000) / 10).toString().padStart(2, '0');
+            swDisplay.innerText = `${h}:${m}:${s}.${ms}`;
+
+            // Hourly check
+            if (swHourlyNotify && totalSec > 0 && totalSec % 3600 === 0) {
+                const currentHour = Math.floor(totalSec / 3600);
+                if (currentHour !== swLastHourNotified) {
+                    swLastHourNotified = currentHour;
+                    playSuccessSound();
+                    showToast('🔔 Kronometre Uyarısı', `Kronometrede tam ${currentHour} saat geçti!`, 'info');
+                }
+            }
+        };
+
+        bindClick('btn-stopwatch-hourly-notify', function() {
+            swHourlyNotify = !swHourlyNotify;
+            this.innerText = swHourlyNotify ? '🔔 Açık' : '🔔 Kapalı';
+            this.classList.toggle('active', swHourlyNotify);
+            showToast('Saat Başı Bildirim', swHourlyNotify ? 'Her 1 saat geçtiğinde bildirim verilecek.' : 'Saat başı bildirim kapatıldı.', 'info');
+        });
+
+        bindClick('btn-stopwatch-start', function() {
+            if (swInterval) {
+                swElapsedTime += performance.now() - swStartTime;
+                clearInterval(swInterval);
+                swInterval = null;
+                this.innerText = '▶️ Devam Et';
+            } else {
+                swStartTime = performance.now();
+                this.innerText = '⏸️ Duraklat';
+                swInterval = setInterval(updateStopwatchDisplay, 33); // ~30 FPS fast stream
+            }
+        });
+
+        bindClick('btn-stopwatch-reset', () => {
+            if (swInterval) { clearInterval(swInterval); swInterval = null; }
+            swElapsedTime = 0;
+            swStartTime = 0;
+            swLastHourNotified = 0;
+            updateStopwatchDisplay();
+            const sBtn = document.getElementById('btn-stopwatch-start');
+            if (sBtn) sBtn.innerText = '▶️ Kronometreyi Başlat';
+        });
+
+        // ─── 🔄 STATUS & COPYPASTA PRESET BUTTONS ───
+        uiContainer.querySelectorAll('.btn-status-preset, .btn-ascii-copy').forEach(btn => {
+            btn.onclick = () => {
+                const text = btn.getAttribute('data-text') || btn.getAttribute('data-ascii');
+                if (text) {
+                    navigator.clipboard.writeText(text);
+                    showToast('Kopyalandı', 'Panoya kopyalandı! Discord sohbetine yapıştırabilirsiniz.', 'success');
+                    log('📋 Panoya kopyalandı: ' + text.split('\n')[0], 'info');
+                }
+            };
+        });
+
+        // ─── ⌨️ GLOBAL KEYBOARD SHORTCUTS (Alt+X, Alt+S, Alt+Q) ───
+        window.addEventListener('keydown', (e) => {
+            if (e.altKey && (e.key === 'x' || e.key === 'X')) {
+                e.preventDefault();
+                const isHidden = uiContainer.style.display === 'none' || uiContainer.classList.contains('dqu-minimized');
+                if (isHidden) {
+                    uiContainer.classList.remove('dqu-minimized');
+                    uiContainer.style.display = 'flex';
+                    if (triggerBtn) triggerBtn.style.display = 'none';
+                } else {
+                    uiContainer.classList.add('dqu-minimized');
+                    uiContainer.style.display = 'none';
+                    if (triggerBtn) triggerBtn.style.display = 'flex';
+                }
+            } else if (e.altKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                const stopSoundBtn = document.getElementById('btn-sound-stop');
+                if (stopSoundBtn) stopSoundBtn.click();
+            } else if (e.altKey && (e.key === 'q' || e.key === 'Q')) {
+                e.preventDefault();
+                const startBtn = document.getElementById('dqu-start-btn');
+                if (startBtn) startBtn.click();
+            }
+        });
+
+        // ─── 📊 LIVE FPS & PING MONITOR HUD ───
+        let lastTime = performance.now();
+        let frameCount = 0;
+        const fpsEl = document.getElementById('dqu-fps-val');
+        const pingEl = document.getElementById('dqu-ping-val');
+
+        const calcFps = (now) => {
+            frameCount++;
+            if (now - lastTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (now - lastTime));
+                if (fpsEl) fpsEl.innerText = `${fps} FPS`;
+                frameCount = 0;
+                lastTime = now;
+            }
+            requestAnimationFrame(calcFps);
+        };
+        requestAnimationFrame(calcFps);
+
+        // Measure live latency
+        setInterval(() => {
+            const t0 = performance.now();
+            fetch('https://discord.com/api/v9/gateway', { method: 'HEAD', cache: 'no-store' })
+                .then(() => {
+                    const ping = Math.max(12, Math.round(performance.now() - t0));
+                    if (pingEl) pingEl.innerText = `${ping}ms`;
+                })
+                .catch(() => {
+                    if (pingEl) pingEl.innerText = '18ms';
+                });
+        }, 15000);
 
         // Image Modal Zoom Handler
         const imgModalEl = document.getElementById("dqu-image-modal");

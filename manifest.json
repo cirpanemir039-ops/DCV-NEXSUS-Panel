@@ -1,7 +1,7 @@
 {
    "manifest_version": 3,
    "name": "DCV - NEXSUS Panel",
-   "version": "2.0.2.1",
+   "version": "2.1.1.0",
    "description": "Discord Otomatik Görev Tamamlayıcı & HypeSquad Paneli - NEXSUS Sürümü",
    "author": "NEXSUS",
    "permissions": [
